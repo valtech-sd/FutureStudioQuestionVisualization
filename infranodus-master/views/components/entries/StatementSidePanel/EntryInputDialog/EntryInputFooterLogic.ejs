@@ -1,0 +1,71 @@
+<script>
+
+        
+        function deleteContextButton() {
+            return {
+                hide: function(){
+                    $('#deletecontext').hide();
+                    $('#deletecontextbutton').hide();
+                
+                },
+                show: function () {
+                    $('#deletecontextbutton').show()
+                    $('#deletecontext').show();
+                }
+            }
+        }
+        
+        function importPane() {
+            return {
+                hide: function(){
+                    $('#importpane').hide();
+                
+                },
+                show: function () {
+                    $('#importpane').show();
+                }
+            }
+        }
+        
+        function importLinkButton() {
+            return {
+                hide: function(){
+                    $('#google-import').hide();
+                
+                },
+                show: function () {
+                    $('#google-import').show();
+                },
+                onClick: function(onClick) {
+                    $('#google-import').on('click', onClick)
+                }
+            }
+        }
+
+        function importFileButton() {
+            return {
+                onClick: function(onClick) {
+                    $('#file-import').on('click', onClick);
+                },
+                redirect: function() {
+                    let redirecturl = '/import/files?context=' + userFactory.getCurrentContext();
+                    let walktype = userFactory.getWalkthrough();
+                    if (walktype) redirecturl += '&walkthrough=' + walktype;
+                    navigation().redirect(redirecturl);
+                },
+                hide: function(){
+                    $('#file-import').hide();
+                
+                },
+                show: function () {
+                    $('#file-import').show();
+                }
+            }
+        }
+        
+      
+        
+   
+        
+            
+    </script>

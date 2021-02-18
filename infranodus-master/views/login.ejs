@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
+    <script src="/javascripts/sigma/sigma.min.js"></script>
+    <script src="/javascripts/sigma/plugins/sigma.parsers.json.min.js"></script>
+    <script src="/javascripts/sigma/plugins/sigma.layout.forceAtlas2.js"></script>
+    <script src="/javascripts/sigma/plugins/sigma.plugins.animate.min.js"></script>
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/ui.js"></script>
+    <script src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="infranodus"></script>
+
+    <% include statsheader %>
+
+</head>
+<body>
+
+<% include statsabove %>
+
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+    <%- include('components/common/menu') %>
+          <div id="content">
+                <div id="welcomemessage" style="background: white;">
+                    <p class="large-caption">Please, log in below or <a href="/signup">sign up</a> for a new account to start using InfraNodus. </p>
+                    <% include messages %>
+                    <form action='/login' method='post' class="pure-form pure-form-stacked">
+                            <p>
+                            <input type='text' name='username' id="username" placeholder='username' />
+                            </p>
+                            <p>
+                            <input type='password' name='password' placeholder='password' />
+                            </p>
+                            <input type='hidden' name='redirect' id="redirect" value=""/>
+                            <p>
+                            <button type='submit' class="pure-button pure-button-primary">log in</button>
+                            </p>
+                    </form>
+                    <br>
+                    <p class="small-caption">Forgot password / login or want to reset it? Go to the <a href="/recover">password recovery page</a>.<br><br> If you need to manage your existing paid subscription, please, <a href="javascript:void(0)" data-cb-type="portal">click here</a>.<br>For subscriptions created before 20/10/2018, <a href="https://noduslabs.dpdcart.com/subscriber/login">click here</a>.</p>
+                    <br>
+                    <br>
+
+
+
+
+                </div>
+
+                <div id="graph-container" style="background: white;"></div>
+
+
+            </div>
+
+
+
+
+</div>
+
+
+<script>
+;(function(){
+
+    var jsonpath = '/files/intro.json';
+
+
+
+
+// Add a method to the graph model that returns an
+// object with every neighbors of a node inside:
+
+    sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+        var k,
+                neighbors = {},
+                index = this.allNeighborsIndex[nodeId] || {};
+
+        for (k in index)
+            neighbors[k] = this.nodesIndex[k];
+
+        return neighbors;
+    });
+
+// Initialize JSON parser for SIGMA visualization
+
+    sigma.parsers.json(
+            jsonpath,
+            {
+                container: 'graph-container',
+                renderer: {
+                    container: document.getElementById('graph-container'),
+                    type: 'canvas'
+                },
+                settings: {
+                    minNodeSize: 5,
+                    maxNodeSize: 16,
+                    minEdgeSize: 0.5,
+                    maxEdgeSize: 2,
+                    labelThreshold: 8
+                }
+            },
+            function(sigma) {
+
+                var i,
+                        timeout = 4000,
+                        nodes = sigma.graph.nodes(),
+                        color_context = '#888',
+                        color_addcontext = '#666688',
+                        len = nodes.length;
+
+
+                // This is a fix for JSON
+                // Sigma requires that nodes have X, Y, Size and Color properties which our JSON doesn't have. So we add them.
+                // We also make the initial graph layout circular, so that ForceAtlas always looks the same
+
+                for (i = 0; i < len; i++) {
+                    var angle = Math.PI * 2 * i / len;
+                    nodes[i].x = Math.cos(angle);
+                    nodes[i].y = Math.sin(angle);
+                    nodes[i].size = sigma.graph.degree(nodes[i].id);
+                    nodes[i].color = color_context;
+                }
+
+
+                // Do ForceAtlasLayout
+
+                sigma.startForceAtlas2();
+
+                // Don't run it forever not to overheat :)
+
+                setTimeout(function() {
+                    sigma.stopForceAtlas2();
+                },timeout);
+
+
+
+
+                // Zoom Graph Control
+
+                var c = sigma.camera;
+
+
+                $("#zoom-in").on('click', function(e) {
+                    // Zoom in - single frame :
+                    c.goTo({
+                        ratio: c.ratio / c.settings('zoomingRatio')
+                    });
+                });
+
+                $("#zoom-out").on('click', function(e) {
+                    // Zoom out - single frame :
+                    c.goTo({
+                        ratio: c.ratio * c.settings('zoomingRatio')
+                    });
+                });
+
+
+
+
+            }
+    );
+
+
+    $(document).ready(function(){
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+
+    var redirect = getUrlVars()["redirect"];
+
+    var login = getUrlVars()["login"];
+
+    $('#redirect').val(redirect);
+
+    $('#username').val(login);
+
+
+    });
+
+
+
+
+})();
+
+
+
+</script>
+
+<script src="/javascripts/ui.js"></script>
+
+
+
+<% include statsbelow %>
+
+</body>
+</html>

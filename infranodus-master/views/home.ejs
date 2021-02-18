@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+    <title><%= title %></title>
+    <meta name="description" content="Convert any text into network to get a better overview and interesting insights." />
+    <meta name="keywords"  content="tna, text network analysis, network, text, dataviz, bigdata" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/jquery.fullPage.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/fullPage.extras.css" />
+    <link type="text/css" rel="stylesheet" href="/stylesheets/featherlight.css" title="Featherlight Styles" />
+
+    <% include statsheader %>
+
+    <style>
+
+            /* Sections
+             * --------------------------------------- */
+
+        .intro p{
+            width: 50%;
+            margin: 0 auto;
+            font-size: 1.5em;
+            z-index:10;
+        }
+        .twitter-share-button{
+            position: absolute;
+            z-index: 99;
+            right: 149px;
+            top: 9px;
+        }
+
+
+        #section0{
+            background: -webkit-gradient(linear, top left, bottom left, from(#efe9e9), to(#e0e3e3));
+            background: -webkit-linear-gradient(#efe9e9, #e0e3e3);
+            background: linear-gradient(#efe9e9,#e0e3e3);
+        }
+        #section1{
+            background: -webkit-gradient(linear, top left, bottom left, from(#9799f8), to(#f2bee7));
+            background: -webkit-linear-gradient(#9799f8, #f2bee7);
+            background: linear-gradient(#9799f8,#f2bee7);
+        }
+        #section2{
+            background: -webkit-gradient(linear, top left, bottom left, from(#969ac6), to(#636F8F));
+            background: -webkit-linear-gradient(#969AC6, #636F8F);
+            background: linear-gradient(#969AC6,#636F8F);
+        }
+
+        #section3{
+          background: -webkit-gradient(linear, top left, bottom left, from(#f8a3dc), to(#a0b6ff));
+          background: -webkit-linear-gradient(#f8a3dc, #a0b6ff);
+          background: linear-gradient(#f8a3dc,#a0b6ff);
+        }
+        #section4{
+          background: -webkit-gradient(linear, top left, bottom left, from(#a3abd8), to(#c2b7f8));
+          background: -webkit-linear-gradient(#a3abd8, #c2b7f8);
+          background: linear-gradient(#a3abd8,#c2b7f8);
+
+
+        }
+        #section5{
+          background: -webkit-gradient(linear, top left, bottom left, from(#f8a3dc), to(#a0b6ff));
+          background: -webkit-linear-gradient(#f8a3dc, #a0b6ff);
+          background: linear-gradient(#f8a3dc,#a0b6ff);
+
+        }
+
+        #section6{
+          background: -webkit-gradient(linear, top left, bottom left, from(#f8a3dc), to(#a0b6ff));
+          background: -webkit-linear-gradient(#f8a3dc, #a0b6ff);
+          background: linear-gradient(#f8a3dc,#a0b6ff);
+
+        }
+        #network-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        #slide2{
+            background: -webkit-gradient(linear, top left, bottom left, from(#d7cdea), to(#f874d3));
+            background: -webkit-linear-gradient(#d7cdea, #f874d3);
+            background: linear-gradient(#b8d3f5,#8992b6);
+        }
+        #slide3{
+            background: -webkit-gradient(linear, top left, bottom left, from(#92a1ca), to(#76c2bd));
+            background: -webkit-linear-gradient(#92a1ca, #76c2bd);
+            background: linear-gradient(#7BAABE,#969AC6);
+        }
+        #slide5{
+            background: -webkit-gradient(linear, top left, bottom left, from(#92a1ca), to(#76c2bd));
+            background: -webkit-linear-gradient(#92a1ca, #76c2bd);
+            background: linear-gradient(#a0c6f5,#f9dfeb);
+        }
+
+
+    </style>
+    <!--[if IE]>
+    <script type="text/javascript">
+        var console = { log: function() {} };
+    </script>
+    <![endif]-->
+
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/jquery-ui.min.js"></script>
+    <script src="/javascripts/TweenLite.min.js"></script>
+    <script src="/javascripts/featherlight.js"></script>
+
+    <script src="/javascripts/EasePack.min.js"></script>
+
+    <script type="text/javascript" src="/javascripts/jquery.fullPage.js"></script>
+    <script type="text/javascript">
+
+        function getUrlVars()
+                {
+                    var vars = [], hash;
+                    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                    for(var i = 0; i < hashes.length; i++)
+                    {
+                        hash = hashes[i].split('=');
+                        vars.push(hash[0]);
+                        vars[hash[0]] = hash[1];
+                    }
+                    return vars;
+                }
+
+        var ref = getUrlVars()['ref'];
+
+        if (ref == 'im') {
+          window.location = 'https://infranodus.com/infranodus/feedbackemail';
+        }
+
+        $(document).ready(function() {
+            $('#fullpage').fullpage({
+                anchors: ['home', 'features', 'usecases', 'graphs', 'tutorials', 'help', 'about'],
+                menu: '#menu',
+                scrollOverflow: true,
+                responsive: 800,
+                loopTop: true,
+                loopBottom: true
+            });
+
+           /* $('#content-box').animate({scrollLeft: 100}, 800);*/
+
+            $(".menuhit").click(function(){
+                var moveby = $(this).position().left;
+                $('#content-box').animate({scrollLeft: moveby-10}, 800);
+                return true;
+            });
+
+
+
+            var width, height, canvas, ctx, points, target, animateHeader = true;
+
+            // Main
+            initHeader();
+            initAnimation();
+            addListeners();
+
+            function initHeader() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                target = {x: width/2, y: height/2};
+
+                //console.log("test",document.getElementById('large-header'));
+
+                canvas = document.getElementById('network-canvas');
+                canvas.width = width;
+                canvas.height = height;
+                ctx = canvas.getContext('2d');
+
+                // create points
+                points = [];
+                for(var x = 0; x < width; x = x + width/20) {
+                    for(var y = 0; y < height; y = y + height/20) {
+                        var px = x + Math.random()*width/20;
+                        var py = y + Math.random()*height/20;
+                        var p = {x: px, originX: px, y: py, originY: py };
+                        points.push(p);
+                    }
+                }
+
+                // for each point find the 5 closest points
+                for(var i = 0; i < points.length; i++) {
+                    var closest = [];
+                    var p1 = points[i];
+                    for(var j = 0; j < points.length; j++) {
+                        var p2 = points[j]
+                        if(!(p1 == p2)) {
+                            var placed = false;
+                            for(var k = 0; k < 6; k++) {
+                                if(!placed) {
+                                    if(closest[k] == undefined) {
+                                        closest[k] = p2;
+                                        placed = true;
+                                    }
+                                }
+                            }
+
+                            for(var k = 0; k < 6; k++) {
+                                if(!placed) {
+                                    if(getDistance(p1, p2) < getDistance(p1, closest[k])) {
+                                        closest[k] = p2;
+                                        placed = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    p1.closest = closest;
+                }
+
+                // assign a circle to each point
+                for(var i in points) {
+                    var c = new Circle(points[i], 2+Math.random()*10, 'rgba(255,255,255,0.3)');
+                    points[i].circle = c;
+                }
+            }
+
+            // Event handling
+            function addListeners() {
+                if(!('ontouchstart' in window)) {
+                    window.addEventListener('mousemove', mouseMove);
+                }
+                window.addEventListener('scroll', scrollCheck);
+                window.addEventListener('resize', resize);
+            }
+
+            function mouseMove(e) {
+                var posx = posy = 0;
+                if (e.pageX || e.pageY) {
+                    posx = e.pageX;
+                    posy = e.pageY;
+                }
+                else if (e.clientX || e.clientY)    {
+                    posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+                    posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+                }
+                target.x = posx;
+                target.y = posy;
+            }
+
+            function scrollCheck() {
+                if(document.body.scrollTop > height) animateHeader = false;
+                else animateHeader = true;
+            }
+
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+
+            // animation
+            function initAnimation() {
+                animate();
+                for(var i in points) {
+                    shiftPoint(points[i]);
+                }
+            }
+
+            function animate() {
+                if(animateHeader) {
+                    ctx.clearRect(0,0,width,height);
+                    for(var i in points) {
+                        // detect points in range
+                        if(Math.abs(getDistance(target, points[i])) < 4000) {
+                            points[i].active = 0.3;
+                            points[i].circle.active = 0.8;
+                        } else if(Math.abs(getDistance(target, points[i])) < 20000) {
+                            points[i].active = 0.1;
+                            points[i].circle.active = 0.5;
+                        } else if(Math.abs(getDistance(target, points[i])) < 40000) {
+                            points[i].active = 0.02;
+                            points[i].circle.active = 0.3;
+                        } else {
+                            points[i].active = 0;
+                            points[i].circle.active = 0;
+                        }
+
+                        drawLines(points[i]);
+                        points[i].circle.draw();
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            function shiftPoint(p) {
+                TweenLite.to(p, 1+1*Math.random(), {x:p.originX-50+Math.random()*100,
+                    y: p.originY-50+Math.random()*100, ease:Circ.easeInOut,
+                    onComplete: function() {
+                        shiftPoint(p);
+                    }});
+            }
+
+            // Canvas manipulation
+            function drawLines(p) {
+                if(!p.active) return;
+                for(var i in p.closest) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p.closest[i].x, p.closest[i].y);
+                    ctx.strokeStyle = 'rgba(156,217,249,'+ p.active+')';
+                    ctx.stroke();
+                }
+            }
+
+            function Circle(pos,rad,color) {
+                var _this = this;
+
+                // constructor
+                (function() {
+                    _this.pos = pos || null;
+                    _this.radius = rad || null;
+                    _this.color = color || null;
+                })();
+
+                this.draw = function() {
+                    if(!_this.active) return;
+                    ctx.beginPath();
+                    ctx.arc(_this.pos.x, _this.pos.y, _this.radius, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = 'rgba(156,217,249,'+ _this.active+')';
+                    ctx.fill();
+                };
+            }
+
+            // Util
+            function getDistance(p1, p2) {
+                return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
+            }
+
+        });
+    </script>
+
+</head>
+<body>
+
+<% include statsabove %>
+
+<div id="content-box">
+<ul id="menu">
+    <li data-menuanchor="home"><a href="#home" class="menuhit">InfraNodus</a></li>
+    <li data-menuanchor="features"><a href="#features" class="menuhit">Features</a></li>
+    <li data-menuanchor="usecases"><a href="#usecases" class="menuhit">Use Cases</a></li>
+    <li data-menuanchor="graphs"><a href="#graphs" class="menuhit">Graphs</a></li>
+    <li data-menuanchor="tutorials"><a href="#tutorials" class="menuhit">Tutorials</a></li>
+    <li data-menuanchor="help"><a href="#help" class="menuhit">Support</a></li>
+    <li data-menuanchor="about"><a href="#about" class="menuhit">About</a></li>
+</ul>
+</div>
+
+
+<div id="fullpage">
+    <div class="section" id="section0">
+        <canvas id="network-canvas" height="100%" width="100vh"></canvas>
+        <div class="ontop">
+            <h1>InfraNodus</h1>
+            <p>Generate insight using text network visualization and analysis.
+            </p>
+           
+            <!-- <p class='smallcaption squeezed squeezedinv'>Use this tool to convert any text into a graph where the nodes are the words and their co-occurrences are the connections between them. 
+                <br>This visualization technique will provide an overview of the main topical clusters as well as the structural gaps where there's a high potential for new ideas and insights.<br>&nbsp;<br></p> -->
+            <ul class="submenu">
+            <li><a href="/login">Login</a></li>
+            <li><a href="/signup">Sign Up</a></li>
+            <li><a href="https://noduslabs.com/wp-content/uploads/2019/06/InfraNodus-Paranyushkin-WWW19-Conference.pdf?ref=infrahome" rel="nofollow">Whitepaper</a></li>
+            </ul>
+            <br>
+            <div class="videoframe" id="videointro"> <br>
+                <iframe width='500' height='320' style='width: 500px; height: 320px' src='https://infranodus.com/apps/graphtools?background=default&&most_influential=bc&&maxnodes=150&hide_always=1&hide_edit=1&hide_max=1&link_hashtags=1&background=default&maxnodes=150' frameborder='0' allowfullscreen></iframe>
+            </div>
+
+       </div>
+    </div>
+    <div class="section" id="section1">
+
+
+
+    <div class="slide">
+
+        <div class="intro">
+            <h1>Visualize any Text as a Network</h1>
+            <p>Tag cloud with a context: you can see not only the main terms, but also the relations between them.</p>
+            <ul class="submenu">
+                <li><a href="/demo/text?walkthrough=force">Try the Demo</a></li>
+                <li><a href="https://www.youtube.com/watch?v=0mIT9Ni5SO4" class="demo" data-featherlight="#video13">Watch the Video</a></li>
+            </ul>
+            <div class="videoframe" id="video13"> <br>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/0mIT9Ni5SO4?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="intro">
+            <h1>Text Mining and Analytics</h1>
+            <p>Identify the most influential terms and topical clusters, reveal discourse patterns, compare different texts.</p>
+            <ul class="submenu">
+                <li><a href="/politics/trump2017?walkthrough=force" class="demo">Demo (Trump's Speech)</a></li>
+                <li><a href="https://www.youtube.com/watch?v=jXpYJJsfpdU" class="demo" data-featherlight="#video14">Video</a></li>
+            </ul>
+            <div class="videoframe" id="video14"> <br>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/jXpYJJsfpdU?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+        <div class="slide">
+            <div class="intro">
+                <h1>Nonlinear Reading</h1>
+                <p>Use the network visualization as a prism to find the most revelant parts of the text.</p>
+                <ul class="submenu">
+                    <li><a href="/texts/communistmanifesto?walkthrough=force">Demo (Communist Manifesto)</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=OZ1CgtFCQVQ" class="demo" data-featherlight="#video15">Video</a></li>
+                </ul>
+                <div class="videoframe" id="video15"> <br>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/OZ1CgtFCQVQ?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="slide">
+            <div class="intro">
+                <h1>Data Import</h1>
+                <p>Visualize Gephi graphs, CSV files, RSS feeds, web pages, Google search results and Twitter discourse to understand it better.</p>
+                <ul class="submenu">
+                    <li><a href="/news/english?walkthrough=force" class="demo">Demo (News RSS)</a></li>
+                    <li><a href="https://noduslabs.com/featured/news-analysis-visualization-rss-feeds/" class="demo" target="_blank">Case Study</a></li>
+                </ul>
+                <div class="videoframe"> <br>
+                    <a href="/news/english" class="demo"><img src="/images/news-analysis.jpg" border="0"></a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="slide">
+            <div class="intro">
+                <h1>Identify Discourse Diversity</h1>
+                <p>Use the network graph structure insights to identify and study discourse diversity level.</p>
+                <ul class="submenu">
+                    <li><a href="/cambridgea/edit?walkthrough=force">Demo (Cambridge Analytica)</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=0a1a6N3oPQM" class="demo" data-featherlight="#video16">Video</a></li>
+                </ul>
+                <div class="videoframe" id="video16"> <br>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/0a1a6N3oPQM?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+    <div class="section" id="section2">
+
+            <div class="slide">
+                    <div class="intro">
+                        <h1>For Readers:</h1>
+                        <h2>Visualize any collection of texts as a network.</h2>
+                        <p>Discover the main topics in your research notes and ideas, find relations and gaps.</p>
+                        <ul class="submenu">
+                            <li><a href="/research/notes?walkthrough=force">Demo</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=RXyymeKZlEo" class="demo" data-featherlight="#video17">Video</a></li>
+                            <li><a href="https://noduslabs.com/cases/connect-ideas-research-notes-graph/" class="demo" target="_blank">Case Study</a></li>
+                        </ul>
+                        <div class="videoframe" id="video17"> <br>
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/RXyymeKZlEo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+      <div class="slide">
+          <div class="intro">
+              <h1>For Search Engine Optimization:</h1>
+              <h2>Text mining using network analysis</h2>
+              <p>Identify and target the gaps between what people search for and what they actually find.</p>
+              <ul class="submenu">
+                  <li><a href="https://www.youtube.com/watch?v=-qgkB0XD4bM&feature=youtu.be" class="demo" data-featherlight="#video19">Video</a></li>
+                  <li><a href="https://noduslabs.com/cases/google-seo-strategies-text-mining/" class="demo" target="_blank">Case Study</a></li>
+              </ul>
+              <div class="videoframe" id="video19"> <br>
+                  <iframe width="560" height="315" src="https://www.youtube.com/embed/-qgkB0XD4bM?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              </div>
+          </div>
+      </div>
+
+
+      <div class="slide">
+            <div class="intro">
+                <h1>For Marketing:</h1>
+                <h2>Build advanced brand association maps with networks.</h2>
+                <p>Find the main topics and the most influential terms in product reviews, customer reports, and polls.</p>
+                <ul class="submenu">
+                    <li><a href="https://noduslabs.com/cases/hotjar-customer-feedback-analysis/" class="demo" target="_blank">Case Study</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="slide">
+            <div class="intro">
+                <h1>For Monitoring:</h1>
+                <h2>RSS feed visualization</h2>
+                <p>See what the top 5 English-language newspapers are writing about in one glance.</p>
+                <ul class="submenu">
+                    <li><a href="/news/english?walkthrough=force" class="demo">Demo Graph</a></li>
+                    <li><a href="https://noduslabs.com/featured/news-analysis-visualization-rss-feeds/" class="demo" target="_blank">Case Study</a></li>
+                </ul>
+                <div class="videoframe"> <br>
+                    <a href="/news/english" class="demo"><img src="/images/news-analysis.jpg" border="0"></a>
+                </div>
+            </div>
+        </div>
+
+       
+
+        <div class="slide">
+            <div class="intro">
+                <h1>For Researchers:</h1>
+                <h2>Where could your thought go next?</h2>
+                <p>Identify structural gaps in your current discourse to discover how you can take it further.</p>
+                <ul class="submenu">
+                    <li><a href="/research/bias?walkthrough=force">Demo</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=bMmTRBZpjWw" class="demo" data-featherlight="#video18">Video</a></li>
+                    <li><a href="https://noduslabs.com/courses/text-network-analysis-for-cognitive-stimulation/units/enhance-your-research-using-text-network-analysis/?try" class="demo" target="_blank">Tutorial</a></li>
+                </ul>
+                <div class="videoframe" id="video18"> <br>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/bMmTRBZpjWw?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+      <div class="slide">
+            <div class="intro">
+                <h1>For SEO:</h1>
+                <p>Find the right combinations of keywords to boost SEO levels.</p>
+                <ul class="submenu">
+                    <li><a href="http://noduslabs.com/cases/seo-tutorial-keyword-visualization-search-engine-optimization/">Case Study</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide" id="slide5">
+            <div class="intro">
+                <h1>For Psychologists & Interviewers:</h1>
+                <p>Using visual feedback to bring in more choices into a conversation.</p>
+                <ul class="submenu">
+                    <li><a href="http://noduslabs.com/cases/text-network-visualization-psychotherapy/">Case Study</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="intro">
+                <h1>For SMM:</h1>
+                <p>Quick visual summary of online discourse.</p>
+                <ul class="submenu">
+                    <li><a href="http://noduslabs.com/cases/twitter-xray-text-network-analysis/">Case Study</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="section" id="section3">
+    <div class="slide">
+            <div class="intro">
+                <h2>TCM Mind Map</h2>
+                <p>Relations between the organs, their functions, the elements, and the ailments from the traditional Chinese medicine.</p>
+                <div class="videoclick">
+                    <ul class="submenu">
+                        <li><a href="/chinesemedicine/organs?hide_when_small=1">View</a></li>
+                    </ul>
+                </div>
+                <div class="videoframe">
+                <div class="graphshowcase">
+                    <div class="graphwindow"><span class="Centerer"></span><a href="/chinesemedicine/organs?hide_when_small=1"><img src="/images/sample-graph-infragraph-text-mining.png" border="0"></a></div>
+                </div>
+                </div>
+            </div>
+      </div>
+      <div class="slide">
+          <div class="intro">
+              <h2>The News of the Day</h2>
+              <p>Visual summary of the RSS feeds from the top world newspapers.</p>
+              <div class="videoclick">
+                  <ul class="submenu">
+                      <li><a href="/news/english">View</a></li>
+                  </ul>
+              </div>
+              <div class="videoframe">
+              <div class="graphshowcase">
+                  <div class="graphwindow"><span class="Centerer"></span><a href="/news/english"><img src="/images/sample-graph-infragraph-philosophy.png" border="0"></a></div>
+              </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="slide">
+          <div class="intro">
+              <h2>Bible, Genesis 1:1</h2>
+              <p>Sample visualization of the Bible, Genesis text </p>
+              <div class="videoclick">
+                  <ul class="submenu">
+                      <li><a href="/infranodus/bible">View</a></li>
+                  </ul>
+              </div>
+              <div class="videoframe">
+              <div class="graphshowcase">
+                  <div class="graphwindow"><span class="Centerer"></span><a href="/infranodus/bible"><img src="/images/sample-graph-infragraph-philosophy.png" border="0"></a></div>
+              </div>
+              </div>
+          </div>
+      </div>
+      <div class="slide">
+        <div class="intro">
+            <h2>Notes, Quotations & Excerpts</h2>
+            <p>Visualization of the main topics that come up in the notes and excerpts taken from the book "Survival"</p>
+            <div class="videoclick">
+                <ul class="submenu">
+                    <li><a href="/amazon/deepSurvival?hide_when_small=1">View</a></li>
+                </ul>
+            </div>
+            <div class="videoframe">
+            <div class="graphshowcase">
+                <div class="graphwindow"><span class="Centerer"></span><a href="/amazon/deepSurvival?hide_when_small=1"><img src="/images/sample-graph-amazon-deepSurvival.png" border="0"></a></div>
+            </div>
+            </div>
+        </div>
+    </div>
+ 
+
+      <div class="slide">
+          <div class="intro">
+              <h2>Magic & Happiness by Giorgio Agamben</h2>
+              <p>Abstract visualization example (no nodes and no statements shown)</p>
+              <div class="videoclick">
+                  <ul class="submenu">
+                      <li><a href="/abstract/magichappiness?background=dark&&most_influential=bc&abstract=yes&hide_always=1">View</a></li>
+                  </ul>
+              </div>
+              <div class="videoframe">
+              <div class="graphshowcase">
+                  <div class="graphwindow"><span class="Centerer"></span><a href="/abstract/magichappiness?background=dark&&most_influential=bc&abstract=yes&hide_always=1"><img src="/images/sample-graph-infragraph-philosophy.png" border="0"></a></div>
+              </div>
+              </div>
+          </div>
+      </div>
+      <div class="slide">
+          <div class="intro">
+              <h2>"Darkness" by Lord Byron</h2>
+              <p>Abstract visualization example - notice the different structure of discourse in poetry.</p>
+              <div class="videoclick">
+                  <ul class="submenu">
+                      <li><a href="/abstract/byrondarkness?background=dark&&most_influential=bc&&abstract=yes&hide_always=1">View</a></li>
+                  </ul>
+              </div>
+              <div class="videoframe">
+              <div class="graphshowcase">
+                  <div class="graphwindow"><span class="Centerer"></span><a href="/abstract/byrondarkness?background=dark&&most_influential=bc&&abstract=yes&hide_always=1"><img src="/images/sample-graph-infragraph-philosophy.png" border="0"></a></div>
+              </div>
+              </div>
+          </div>
+      </div>
+      <div class="slide">
+          <div class="intro">
+              <h2>Communist Manifesto</h2>
+              <p>Sample visualization of the Communist Manifesto</p>
+              <div class="videoclick">
+                  <ul class="submenu">
+                      <li><a href="/texts/communistmanifesto">View</a></li>
+                  </ul>
+              </div>
+              <div class="videoframe">
+              <div class="graphshowcase">
+                  <div class="graphwindow"><span class="Centerer"></span><a href="/texts/communistmanifesto"><img src="/images/sample-graph-travel-berlin.png" border="0"></a></div>
+              </div>
+              </div>
+          </div>
+      </div>
+      <div class="slide">
+          <div class="intro">
+              <h2>Text Mining Methods</h2>
+              <p>Concept knowledge graph using #hashtags</p>
+              <div class="videoclick">
+                  <ul class="submenu">
+                      <li><a href="/textmining/methods">View</a></li>
+                  </ul>
+              </div>
+              <div class="videoframe">
+              <div class="graphshowcase">
+                  <div class="graphwindow"><span class="Centerer"></span><a href="/textmining/methods"><img src="/images/sample-graph-infragraph-text-mining.png" border="0"></a></div>
+              </div>
+              </div>
+          </div>
+      </div>
+      <div class="slide">
+          <div class="intro">
+              <h2>"I Have a Dream"</h2>
+              <p>Text network visualization of the iconic Martin Luther King speech.</p>
+              <div class="videoclick">
+                  <ul class="submenu">
+                      <li><a href="/infranodus/ihaveadream">View</a></li>
+                  </ul>
+              </div>
+              <div class="videoframe">
+              <div class="graphshowcase">
+                  <div class="graphwindow"><span class="Centerer"></span><a href="/infranodus/ihaveadream"><img src="/images/sample-graph-infragraph-philosophy.png" border="0"></a></div>
+              </div>
+              </div>
+          </div>
+      </div>
+        <div class="slide">
+            <div class="intro">
+                <h2>Philosophers</h2>
+                <p>Constellation of relations between philosophers based on how often people search for them. </p>
+                <div class="videoclick">
+                    <ul class="submenu">
+                        <li><a href="/infragraph/philosophy?go_next_site=wikipedia&hide_always=1&link_hashtags=1&go_next_override=1">View</a></li>
+                    </ul>
+                </div>
+                <div class="videoframe">
+                <div class="graphshowcase">
+                    <div class="graphwindow"><span class="Centerer"></span><a href="/infragraph/philosophy?go_next_site=wikipedia&hide_always=1&link_hashtags=1&go_next_override=1"><img src="/images/sample-graph-infragraph-philosophy.png" border="0"></a></div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <h2>Berlin</h2>
+                <p>"If you like Tresor you will also like Berghain" kind of constellation for the best Berlin places.</p>
+                <div class="videoclick">
+                    <ul class="submenu">
+                        <li><a href="/travel/berlin?hide_when_small=1">View</a></li>
+                    </ul>
+                </div>
+                <div class="videoframe">
+                            <div class="graphshowcase">
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/travel/berlin?hide_when_small=1"><img src="/images/sample-graph-travel-berlin.png" border="0"></a></div>
+                            </div>
+                    </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <h2>Create</h2>
+                <p>Your own constellation of knowledge to retain and connect your ideas.</p>
+                <div class="videoclick">
+                    <ul class="submenu">
+                        <li><a href="/login">Start</a></li>
+                        <li><a href="http://noduslabs.com/network-graphs/">More Samples</a></li>
+                    </ul>
+                </div>
+                <div class="videoframe">
+                <div class="graphshowcase">
+                    <div class="graphwindow"><span class="Centerer"></span><a href="/login"><img src="/images/sample-graph-add.png" border="0" width="220" height="220"></a></div>
+                    <ul class="submenu">
+                        <li><a href="http://noduslabs.com/network-graphs/">More Samples</a></li>
+                    </ul>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <h2>Music Labels</h2>
+                <p>The most interesting techno and leftfield labels, curated by DEM LEEDZ.</p>
+                <div class="videoclick">
+                    <ul class="submenu">
+                        <li><a href="/musicgraph/labels?go_next_site=soundcloud&link_hashtags=1&hide_always=1&go_next_override=1">View</a></li>
+                    </ul>
+                </div>
+                <div class="videoframe">
+                <div class="graphshowcase">
+                    <div class="graphwindow"><span class="Centerer"></span><a href="/musicgraph/labels?go_next_site=soundcloud&link_hashtags=1&hide_always=1&go_next_override=1"><img src="/images/sample-graph-musicgraph-labels.png" border="0"></a></div>
+                </div>
+                </div>
+
+            </div>
+        </div>
+      
+        <div class="slide">
+            <div class="intro">
+                <h2>Tarot Cards</h2>
+                <p>Numerological and logical connections between Tarot cards.</p>
+                <div class="videoclick">
+                    <ul class="submenu">
+                        <li><a href="/tarot?hide_when_small=1">View</a></li>
+                    </ul>
+                </div>
+                <div class="videoframe">
+                <div class="graphshowcase">
+                    <div class="graphwindow"><span class="Centerer"></span><a href="/tarot?hide_when_small=1"><img src="/images/sample-graph-tarot.png" border="0"></a></div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="section" id="section4">
+
+            <div class="slide">
+                    <div class="intro">
+                        <h1>SEO: Identify Gaps in a Public Discourse</h1>
+                        <p>Using a combination of SEO and text mining techniques you can identify the gaps in any discourse and create relevant content to fulfil those gaps.</p>
+                        <ul class="submenu">
+                            <li><a href="https://www.youtube.com/watch?v=-qgkB0XD4bM" class="demo" data-featherlight="#video20">Watch Webinar</a></li>
+                            <li><a href="https://noduslabs.com/cases/google-seo-strategies-text-mining/">Practice</a></li>
+                        </ul>
+                        <div class="videoframe" id="video20"> <br>
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/-qgkB0XD4bM?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+      <div class="slide">
+        <div class="intro">
+            <h1>Detect Bias in Discourse</h1>
+            <p>Estimate how biased, focused or diversified the discourse structure is.</p>
+            <ul class="submenu">
+                <li><a href="https://www.youtube.com/watch?v=0a1a6N3oPQM" class="demo" data-featherlight="#video11">Watch Webinar</a></li>
+                <li><a href="https://towardsdatascience.com/measuring-discourse-bias-using-text-network-analysis-9f251be5f6f3" rel="nofollow">Case Study</a></li>
+                <li><a href="https://noduslabs.com/courses/text-network-analysis-for-cognitive-stimulation/units/comparative-analysis/page/2/">Practice</a></li>
+            </ul>
+            <div class="videoframe" id="video11"> <br>
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/0a1a6N3oPQM?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+      </div>
+
+ 
+        <div class="slide">
+            <div class="intro">
+                <h1>Re-think Discourse</h1>
+                <p>How to represent a text as a graph and have a different perspective on discourse.</p>
+                <ul class="submenu">
+                    <li><a href="https://www.youtube.com/watch?v=0mIT9Ni5SO4" class="demo" data-featherlight="#video7">Watch Webinar</a></li>
+                    <li><a href="https://noduslabs.com/courses/text-network-analysis-for-cognitive-stimulation/units/think-of-a-discourse-in-a-different-way/?try">Practice</a></li>
+                </ul>
+                <div class="videoframe" id="video7"> <br>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/0mIT9Ni5SO4?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+          <div class="slide">
+            <div class="intro">
+                <h1>Visualize Any Big Text</h1>
+                <p>Identify the main topics, see how they are connected, read and study the text in nonlinear way.</p>
+                <ul class="submenu">
+                    <li><a href="https://www.youtube.com/watch?v=OZ1CgtFCQVQ" class="demo" data-featherlight="#video8">Watch Webinar</a></li>
+                    <li><a href="https://noduslabs.com/courses/text-network-analysis-for-cognitive-stimulation/units/visualize-any-big-text/?try">Practice</a></li>
+                </ul>
+                <div class="videoframe" id="video8"> <br>
+                  <iframe width="560" height="315" src="https://www.youtube.com/embed/OZ1CgtFCQVQ?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+          <div class="intro">
+              <h1>Comparative Analysis</h1>
+              <p>Compare two different texts using text network graph visualization.</p>
+              <ul class="submenu">
+                  <li><a href="https://www.youtube.com/watch?v=jXpYJJsfpdU" class="demo" data-featherlight="#video9">Watch Webinar</a></li>
+                  <li><a href="https://noduslabs.com/courses/text-network-analysis-for-cognitive-stimulation/units/visualize-any-big-text/?try">Practice</a></li>
+              </ul>
+              <div class="videoframe" id="video9"> <br>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/jXpYJJsfpdU" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              </div>
+          </div>
+      </div>
+        <div class="slide">
+          <div class="intro">
+              <h1>Enhance Your Research</h1>
+              <p>Visualize the connections between all the citations, research notes, and clipped texts. See how to develop the discourse further.</p>
+              <ul class="submenu">
+                  <li><a href="https://www.youtube.com/watch?v=bMmTRBZpjWw" class="demo" data-featherlight="#video10">Watch Webinar</a></li>
+                  <li><a href="https://noduslabs.com/courses/text-network-analysis-for-cognitive-stimulation/units/enhance-your-research-using-text-network-analysis/?try">Practice</a></li>
+              </ul>
+              <div class="videoframe" id="video10"> <br>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/bMmTRBZpjWw?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              </div>
+          </div>
+      </div>
+
+    <div class="slide">
+      <div class="intro">
+          <h1>Connect Your Ideas and Notes</h1>
+          <p>Visualize them as a graph to have an overview, find the main topics, and see how they connect.</p>
+          <ul class="submenu">
+              <li><a href="https://www.youtube.com/watch?v=RXyymeKZlEo" class="demo" data-featherlight="#video12">Watch Webinar</a></li>
+              <li><a href="https://noduslabs.com/courses/text-network-analysis-for-cognitive-stimulation/units/enhance-your-research-using-text-network-analysis/page/2/?saved=ok">Practice</a></li>
+          </ul>
+          <div class="videoframe" id="video12"> <br>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/RXyymeKZlEo?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section" id="section5">
+    <div class="slide">
+        <div class="intro">
+            <h1>InfraNodus Knowledge Base and Support</h1>
+            <p>Step-by-step instructions on creating your own graphs and customer support.</p>
+            <ul class="submenu">
+            <li><a href="https://help.infranodus.com">Knowledge Base</a></li>
+            <li><a href="https://noduslabs.com/contact">Contact Support</a></li>
+            </ul>
+            <br>
+
+        </div>
+    </div>
+ 
+</div>
+
+    <div class="section" id="section6">
+        <div class="slide">
+            <div class="intro">
+                <p>InfraNodus converts any text into a network graph, where the words are the nodes and the co-occurrences are the connections between them. This way you can have an overview of the main topics and also identify the gaps in your discourse to generate insight and new ideas.</p>
+               <br>
+                <p class="smallcaption">Created by <a href="https://scholar.google.com/citations?user=7fyleFwAAAAJ">Dmitry Paranyushkin</a> / <a href="http://www.noduslabs.com">Nodus Labs</a>.<br>
+                  Read the <a href="https://scholar.google.com/citations?user=7fyleFwAAAAJ">research papers</a> our text-to-network algorithm is based on and take our <a href="http://noduslabs.com/courses/text-network-analysis-for-cognitive-stimulation/">online course</a> to learn how it works.<br>
+                  Citation: Paranyushkin, D (2019). InfraNodus: Generating Insight Using Text Network Analysis, Proceedings of WWW'19 The Web Conference, www.infranodus.com (<a href="http://bit.ly/infrasiteacm" rel="nofollow">ACM library</a>, <a href="http://bit.ly/infrapdfhomepage">PDF</a>)
+                </p>
+
+            </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <p class="smallcaption">This free open-source tool is developed by <a href="http://www.noduslabs.com" target="_blank">Nodus Labs</a> (@noduslabs). Please, <a href="http://noduslabs.com/features/invite/" target="_blank">contact us</a> if you have any questions or if you're interested in our enterprise solutions. <br>
+                    <br>InfraNodus is <a href="http://github.com/noduslabs/infranodus" target="_blank">open-source (AGPLv3 license)</a> and it runs on <a href="http://www.neo4j.org" target="_blank" rel="nofollow">Neo4J</a> graph database, <a href="http://www.sigmajs.org" target="_blank" rel="nofollow">Sigma.Js</a> graph visualization library, Node.Js and uses <a href="https://noduslabs.com/research/visualization-text-polysingularity-network-analysis/" target="_blank">Textexture text network analysis algorithm</a> as well as Cytoscape, Graphology and other open-soruce libraries.
+                    <br><br>This software is offered "as is" with no warranty or legal liability of any kind, so, please, use it at your own risk. Please, refer to our <a href="https://infranodus.com/legal/terms">Terms of Use</a> and <a href="https://infranodus.com/infranodus/privacypolicy?maxnodes=90">Privacy Policy</a> for more details.
+                </p>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <h1>Bookmarklet Browser Extension</h1>
+                <p class="caption">Save interesting text excerpts into a graph – drag this bookmarklet into your browser's toolbar:<br><br><a style="cursor: move;" href="javascript:var a=window,b=document,c=encodeURIComponent,s='';s=document.getSelection().toString();if(s!=''){d=a.open('https://infranodus.com/bookmarks/edit?url='+c(b.location)+'&urltitle='+c(s),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}else{d=a.open('https://infranodus.com/bookmarks/edit?url='+c(b.location)+'&urltitle='+c(b.title),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}a.setTimeout(function(){d.focus()},300);">GraphMark</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<% include statsbelow %>
+</body>
+</html>

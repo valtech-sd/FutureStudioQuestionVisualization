@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/jquery.textcomplete.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
+    <link rel="stylesheet" href="/stylesheets/jquery-ui.min.css">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <% include statsheader %>
+
+</head>
+<body>
+<% include statsabove %>
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+    <%- include('components/common/menu') %>
+    <div id='content'>
+
+        <div id='welcomemessage'>
+
+            Import any text, PDF, Gexf (Gephi) or CSV file and visualize the text or the relations inside as a graph:
+            <% include messages %>
+
+            <form action='/import' name='submitform' id="submitform" method='post' enctype="multipart/form-data" class='pure-form pure-form-stacked'>
+                <br>
+                Please, upload your file:
+
+                <div id="filebox">
+                    <input type="file" name="uploadedFile" />
+<br>&nbsp;<br>
+                  </div>
+                    <label for="file3" class="pure-radio">
+                        <input id="file3" type="radio" name="filetype" value="other" checked>
+                        Text files: PDF or TXT
+                        <br>max 3 Mb, <a href="https://noduslabs.com/contact/">contact us</a> for longer)
+                    </label>
+                    <br>
+                    <label for="file5" class="pure-radio">
+                        <input id="file5" type="radio" name="filetype" value="gexf">
+                        Gexf graph format (Gephi)
+                        <br>max 3 Mb, <a href="https://noduslabs.com/contact/">contact us</a> for longer)
+                    </label>
+                    <br>
+                    <label for="file4" class="pure-radio">
+                        <input id="file4" type="radio" name="filetype" value="csv">
+                        CSV file
+                        <br>max 3 Mb, <a href="https://noduslabs.com/contact/">contact us</a> for longer)
+                    </label>
+
+
+                    <label for="titlefield" class="pure-radio" id="titlefieldcaption">
+                        <br>
+                        Separate the imported data into different graphs and name them after the value found in this column (leave empty to import all in one graph):
+                        <input type="text" name="titlefield" id="titlefield" value=""/>
+                    </label>
+
+                    <label for="contextmentions" class="pure-checkbox" id="contextmentionscaption">
+                        <input id="contextmentions" type="checkbox" name="contextmentions" value="1"> Do not separate into graphs, instead add the value found in column above to with the @sign<br>
+                    </label>
+
+                    <label for="removeduplicates" class="pure-checkbox" id="removeduplicatescaption">
+                        <input id="removeduplicates" type="checkbox" name="removeduplicates" value="1"> Do not add duplicate statements<br>
+                    </label>
+
+                    <label for="titlefield" class="pure-radio" id="processfieldcaption">
+                        <br>
+                        Import data only from these columns (comma-separated, leave empty to import all data from all the columns):
+
+                        <input type="text" name="processfield" id="processfield" value=""/>
+                      </label>
+
+                    <label for="titlefield" class="pure-radio"  id="delimiter">
+                      <br>
+                        Column separator for CSV file
+
+                        <input type="text" name="delimiter" id="delimiterfield" value=";"/>
+                      </label>
+
+
+
+                <br>&nbsp;<br>
+                Save in graph:
+                <br>
+                <input type='text' name='context' id='contextname' value='<% if (context) { %><%= context %><% } else { %>imported<% } %>'/>
+                <br>
+
+
+
+                <br>
+
+
+                <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
+                <input type="hidden" name="statementid" value="">
+                <input type="hidden" name="source" value="file">
+                &nbsp;<br>
+                <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
+
+            </form>   &nbsp;<br>&nbsp;<br>
+
+
+
+
+
+        </div>
+
+        <div id="graph-container"></div>
+
+
+    </div>
+
+
+
+
+</div>
+
+
+<script src="/javascripts/jquery.min.js"></script>
+<script src="/javascripts/jquery-ui.min.js"></script>
+<script src="/javascripts/string.min.js"></script>
+<script src="/javascripts/underscore-min.js"></script>
+<script src="/javascripts/jquery.textcomplete.js"></script>
+<script src='/javascripts/jquery.autosize.js'></script>
+<script src="/javascripts/ui.js"></script>
+<script src="/javascripts/jquery.mobile-events.min.js"></script>
+
+
+<script>
+    ;(function(){
+
+
+
+        $('form#submitform').submit(function(){
+            $(this).find('input[type=submit]').attr('disabled', 'disabled');
+        });
+
+        let currentcontext = 'imported';
+
+        <% if (context) { %>
+        currentcontext = '<%= context %>';
+        <% } %>
+
+        var radioButtons3 = $("[name=filetype]"); // get both radiobuttons
+
+        $("#processfield").hide();
+        $("#titlefield").hide();
+        $("#processfieldcaption").hide();
+        $("#delimiter").hide();
+        $("#delimiterfield").hide();
+        $("#contextmentions").hide();
+        $("#contextmentionscaption").hide();
+        $("#removeduplicates").hide();
+        $("#removeduplicatescaption").hide();
+
+
+        $("#titlefieldcaption").hide();
+   
+
+
+        // Later we can add more functions here
+        radioButtons3.change(function () {
+            if ($(this).val() == "zettel") {
+              $("#processfield").show();
+              $("#titlefield").show();
+              $("#processfieldcaption").show();
+
+              $("#titlefieldcaption").show();
+              $("#processfield").val('zettelcontent');
+              $("#titlefield").val('');
+              $("#processfieldcaption").html('<br>Statements to import are in the class:');
+              $("#titlefieldcaption").html('<br>Separate into contexts based on html class or leave empty to import everything in one:');
+
+
+            }
+            else if ($(this).val() == "amazon")
+            {
+              $("#processfield").show();
+              $("#titlefield").show();
+              $("#processfieldcaption").show();
+
+              $("#titlefieldcaption").show();
+                $("#processfield").val('highlight');
+                $("#titlefield").val('title');
+
+
+            }
+            else if ($(this).val() == "other" || $(this).val() == "gexf")
+            {
+              $("#processfield").hide();
+              $("#titlefield").hide();
+              $("#processfieldcaption").hide();
+              $("#delimiter").hide();
+              $("#delimiterfield").hide();
+
+              $("#titlefieldcaption").hide();
+                $("#processfield").val('');
+                $("#titlefield").val('');
+                $("#contextmentionscaption").hide();
+                $("#removeduplicatescaption").hide();
+
+                if ( $(this).val() == "gexf") {
+                    $("#contextname").val('gexf');
+                }
+                 else if ( $(this).val() == "other") {
+                    $("#contextname").val(currentcontext);
+                }
+
+            }
+            else if ($(this).val() == "csv")
+            {
+              $("#processfield").show();
+              $("#titlefield").show();
+              $("#delimiter").show();
+              $("#delimiterfield").show();
+              $("#titlefield").val('');
+              $("#processfieldcaption").show();
+              $("#titlefieldcaption").show();
+              $("#contextmentions").show();
+              $("#contextmentionscaption").show();
+              $("#removeduplicates").show();
+              $("#removeduplicatescaption").show();
+              $("#processfield").val('');
+              $("#contextname").val('csv');
+
+            }
+            
+        });
+
+
+
+    })();
+    $("#addNewContext").on('tap', function(e) {
+
+        $("#addcontextinput").css("visibility", "visible");
+        $("#add").css("visibility", "visible");
+        $("#addcontextname").focus();
+
+
+    });
+
+    $('#addcontextinput').submit(function(e) {
+        e.preventDefault(); // to stop the form from submitting
+        if ($('#addcontextname').val().length > 0) {
+            var contextredirect = $('#addcontextname').val();
+            contextredirect = contextredirect.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+            contextredirect = contextredirect.replace(/[^\w]/gi, '');
+            window.location.href = "/<%= user.name %>/" + contextredirect + '/edit';
+        }
+
+    });
+
+</script>
+
+
+
+
+<% include statsbelow %>
+</body>
+</html>

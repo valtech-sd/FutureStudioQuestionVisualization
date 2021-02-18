@@ -1,0 +1,32 @@
+<div id="explanation">
+    <div id="expsummary">
+        <div class='explintro'><span class='headline'>Top keywords (global influence):<br> </span>
+            <div class="topinfnodes"></div>
+        </div>
+        <div class='explintro'><span class='headline'>Top topics (local contexts):<br></span>
+            <div class="topinftopics"></div>
+        </div>
+        <div class='explintro'>Explore the main topics and terms outlined above or see them in the <a href='javascript:' class='unhidelink underlinelink'>excerpts from this text</a> below.</div>
+    </div>
+    <div id="expinsight">
+        <div class='explintro'>
+            <div id="insightadvice"></div>
+        </div>
+        <div class='explintro'>
+            <div id="insightclusters"></div>
+        </div>
+        <div class='explintro'>See the relevant data in context: <a href='javascript:' class='unhidelink underlinelink'>click here to show the excerpts from this text</a> that contain these topics below.</div>
+    </div>
+</div>
+
+<div id="entries">
+
+    <% entries.forEach(function(entry) { %>
+        <%- include('./StatementEntry', {entry}); %>
+    <% }) %>
+
+    <%- include('../../common/messages', {messages:locals.messages, removeMessages: locals.removeMessages}); %>
+
+    <div id="warnings"></div>
+
+</div>

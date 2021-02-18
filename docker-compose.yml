@@ -1,0 +1,136 @@
+version: '3'
+services:
+  # Word Graph Tool
+  infranodus:
+    image: node:10
+    restart: unless-stopped
+    user: "node"
+    working_dir: "/home/node/app"
+    environment:
+      - NODE_ENV=production
+      - PORT=3020
+    volumes:
+      - ./infranodus-master:/home/node/app
+    expose:
+      - 3020
+    command: "npm start"
+    depends_on:
+      - neo4j
+
+  # Graph database usd by infranodus
+  neo4j:
+    image: neo4j:3.5
+    restart: unless-stopped
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - ./neo4j-data/conf:/conf
+      - ./neo4j-data/data:/data
+      - ./neo4j-data/import:/import
+      - ./neo4j-data/logs:/logs
+      - ./neo4j-data/plugins:/plugins
+    environment: 
+      # Set an initial u/p other than defaults
+      - NEO4J_AUTH=neo4j/secret
+
+  rabbitmq:
+    image: 'bitnami/rabbitmq:3.8'
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_USERNAME=valtech
+      - RABBITMQ_PASSWORD=rocks
+    ports:
+      - '4369:4369'
+      - '5672:5672'
+      - '25672:25672'
+      - '15672:15672'
+  
+  question_publish:
+    image: node:10
+    restart: unless-stopped
+    user: "node"
+    working_dir: "/home/node/app"
+    environment:
+      - NODE_ENV=production
+      - PORT=3030
+      - RABBITMQ_PROTOCOL=amqp
+      - RABBITMQ_USERNAME=valtech
+      - RABBITMQ_PASSWORD=rocks
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_QUEUE=answers
+    volumes:
+      - ./question_backend:/home/node/app
+    # ports:
+    #   - 3030:3030
+    expose:
+      - 3030
+    deploy:
+      mode: replicated
+      replicas: 4
+    command: "npm run start:publish"
+    depends_on:
+      - neo4j
+  
+  question_consume:
+    image: node:10
+    restart: unless-stopped
+    user: "node"
+    working_dir: "/home/node/app"
+    environment:
+      - NODE_ENV=production
+      - RABBITMQ_PROTOCOL=amqp
+      - RABBITMQ_USERNAME=valtech
+      - RABBITMQ_PASSWORD=rocks
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_QUEUE=answers
+      - INFRANODE_POST_URL=http://infranodus:3020/api2/post
+      - INFRANODE_AUTORIZATION_HEADER=Basic dmFsdGVjaDppc3RoZWJlc3Q= 
+    volumes:
+      - ./question_backend:/home/node/app
+    command: "npm run start:consume"
+    depends_on:
+      - neo4j
+  
+        #question_frontend_vuecli:
+        #  image: node:10
+        #  restart: unless-stopped
+        #  user: "node"
+        #  working_dir: "/home/node/app"
+        #  environment:
+        #    - NODE_ENV=production
+        #    - VUE_APP_ANSWER_HOST=http://localhost:3030/post
+        #  volumes:
+        #    - ./question_frontend:/home/node/app
+        #  ports:
+        #    - 8080:8080
+        #  command: "npm run serve"
+        #      #command: >
+        #      #  sh -c "npm run build && npx serve ./build"
+
+  nginx:
+    image: nginx
+    depends_on:
+      - question_publish
+      - question_frontend_nginx
+      - infranodus
+    ports:
+      - "3030:3030"
+      - "3020:3020"
+      - "8080:8080"
+    volumes:
+      - ./docker_config/nginx.conf:/etc/nginx/nginx.conf:ro
+
+  question_frontend_nginx:
+    build:
+      context: .
+      dockerfile: ./question_frontend/Dockerfile
+      args:
+        - ANSWER_HOST=http://localhost:3030/post
+    environment:
+      - NODE_ENV=production
+    # Bind Docker's port 80 to our port 8115
+    expose:
+      - 80

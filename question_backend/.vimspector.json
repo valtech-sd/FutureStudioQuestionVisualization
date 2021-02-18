@@ -1,0 +1,55 @@
+{
+  "configurations": {
+    "Js Run Publish": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "request": "launch",
+        "protocol": "auto",
+        "console": "integratedTerminal",
+        "stopOnEntry": false,
+        "cwd": "${workspaceRoot}",
+        "env": {
+          "NODE_ENV": "TEST",
+          "PORT": 3032,
+          "RABBITMQ_PROTOCOL":"amqp",
+          "RABBITMQ_USERNAME":"valtech",
+          "RABBITMQ_PASSWORD":"rocks",
+          "RABBITMQ_HOST":"rabbitmq",
+          "RABBITMQ_PORT":5672,
+          "RABBITMQ_QUEUE":"answers"
+        },
+        "runtimeExecutable": "npm",
+        "runtimeArgs": [
+            "run-script",
+            "start:publish"
+        ],
+        "port": 9229
+      },
+    "Js Run Consume": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "request": "launch",
+        "protocol": "auto",
+        "console": "integratedTerminal",
+        "stopOnEntry": false,
+        "cwd": "${workspaceRoot}",
+        "env": {
+          "NODE_ENV": "TEST",
+          "RABBITMQ_PROTOCOL":"amqp",
+          "RABBITMQ_USERNAME":"valtech",
+          "RABBITMQ_PASSWORD":"rocks",
+          "RABBITMQ_HOST":"rabbitmq",
+          "RABBITMQ_PORT":5672,
+          "RABBITMQ_QUEUE":"answers"
+        },
+        "runtimeExecutable": "npm",
+        "runtimeArgs": [
+            "run-script",
+            "start:consume"
+        ],
+        "port": 9229
+      }
+    }
+    }
+  }
+}

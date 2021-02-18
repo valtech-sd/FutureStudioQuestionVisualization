@@ -1,0 +1,76 @@
+.tagHandler {
+    width: 100%;
+    position: relative;
+
+}
+.tagHandler ul.tagHandlerContainer {
+
+    overflow: hidden;
+    min-height: 30px;
+    line-height: 30px;
+    cursor: text;
+    font-family: arial, helvetica, sans-serif;
+    padding: 0px 0px;
+    margin: 10px 0px 0px 10px;
+}
+.tagHandler ul.tagHandlerContainer li {
+    font: 16px 'Arial','Helvetica', sans-serif;
+    height: 14px;
+    line-height: 14px;
+    display: block;
+    float: left;
+    font-size: 15px;
+
+    margin: 5px 5px 5px 5px;
+
+    white-space: nowrap;
+}
+.tagHandler ul.tagHandlerContainer li.tagItem {
+    font: 16px 'Arial','Helvetica', sans-serif;
+    padding: 4px 0px;
+}
+.tagHandler ul.tagHandlerContainer li.tagItem:hover {
+/*
+    background-color: #008afb;
+*/
+}
+.tagHandler ul.tagHandlerContainer li.tagInput {
+    font: 16px 'Arial','Helvetica', sans-serif;
+    padding: 0px 4px;
+
+}
+.tagHandler ul.tagHandlerContainer input.tagInputField {
+    box-sizing: border-box;
+    border: none;
+    background-color: #fff;
+    width: 2em;
+    color: #000;
+    font-size: 14px;
+}
+
+
+input.tagInputField::-webkit-input-placeholder {
+    color:#000;
+    opacity:  1;
+    text-align: center;
+}
+input.tagInputField::-moz-placeholder {
+    color:#000;
+    opacity:  1;
+    text-align: center;
+}
+input.tagInputField:-moz-placeholder {
+    color:#000;
+    opacity:  1;
+    text-align: center;
+}
+input.tagInputField::-ms-input-placeholder {
+    color:#000;
+    opacity:  1;
+    text-align: center;
+}
+
+input.tagInputField:focus {
+    width: 6em !important;
+}
+

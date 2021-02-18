@@ -1,0 +1,221 @@
+<script>
+
+    toggleStatementsButton().onClick(statements().toggleStatements);
+    addContextButton().onClick(addContext);
+    diffContextButton().onClick(diffContext);
+
+    // Are we viewing additional context?
+
+    if (userFactory.getAddContext()) {
+        if (userFactory.getGraphOption('highlight_missing')) {
+            $('#diffcontext-link').addClass('diffcontext-visible');
+        }
+        else {
+            $('#addcontext-link').addClass('addcontext-visible');
+        }
+    }
+    
+
+    function addContext() {
+        if ($(".addcontext-on").is(":visible")) {
+                $('#addcontext-link').removeClass('addcontext-on');
+            }
+        else {
+                $('#addcontext-link').addClass('addcontext-on');
+        }
+
+    }
+
+    function diffContext() {
+        if ($(".diffcontext-on").is(":visible")) {
+                $('#diffcontext-link').removeClass('diffcontext-on');
+            }
+        else {
+                $('#diffcontext-link').addClass('diffcontext-on');
+        }
+
+    }
+
+    function toggleStatementsButton() {
+        return {
+            onClick: function(onClick){
+                $('#statements-link').on('click', onClick)
+            }
+        }
+    }
+
+    function addContextButton() {
+        return {
+            onClick: function(onClick){
+                $('#addcontext-link').on('click', onClick)
+            }
+        }
+    }
+
+    function diffContextButton() {
+        return {
+            onClick: function(onClick){
+                $('#diffcontext-link').on('click', onClick)
+            }
+        }
+    }
+
+
+
+    // Dynamic graph functionality
+
+    if (localStorage.getItem('timer') == 1) {
+          ($("#timer-link").trigger('click'));
+    }
+
+
+    // It basically makes only the nodes / edges of the graph visible that the user is currently seeing in the statements div
+
+
+
+    $("#timer-link").click(function(e) {
+      if (!userFactory.getGraphOption('dynamic_graph') || userFactory.getGraphOption('dynamic_graph') == 0) {
+        //localStorage.setItem('timer',1);
+        userFactory.setGraphOption('dynamic_graph', 1);
+        $('#timer-link').addClass('timer-link-on');
+        $('#entries').scrollTop($('#entries').scrollTop() + 1);
+      }
+      else {
+        userFactory.setGraphOption('dynamic_graph', 0);
+        //localStorage.setItem('timer',0);
+        $('#timer-link').removeClass('timer-link-on');
+        statements().selectScrolledOnGraph('',true);
+        if (userFactory.getGraphOption('dynamic_watch') == 1) {
+          $("#watch-link").trigger('click');
+        }
+
+      }
+
+    });
+
+
+
+    // Dynamically watch the graph unfold
+
+    $("#watch-link").click(function(e) {
+
+        if (!userFactory.getGraphOption('dynamic_watch') || userFactory.getGraphOption('dynamic_watch') == 0) {
+
+            userFactory.setGraphOption('dynamic_watch', 1);
+
+            $('#watch-link').addClass('watch-link-on');
+
+            if (!userFactory.getGraphOption('dynamic_graph') || userFactory.getGraphOption('dynamic_graph') == 0) {
+                $("#timer-link").trigger('click');
+            }
+
+            statements().infiniteScroll();
+
+        }
+
+        else  {
+
+            userFactory.setGraphOption('dynamic_watch', 0);
+            $('#watch-link').removeClass('watch-link-on');
+            statements().stopAnimation();
+
+        }
+    });
+
+
+    // Function to construct a graph share URL
+
+    const graphShareConstructor = (() => {
+
+        function GraphShareConstructor() {
+            
+            let site_user_url = userFactory.getHostSite() + '/' + userFactory.getCurrentUser();
+
+
+            if (userFactory.getCurrentContext()) {
+                site_user_url += "/" + userFactory.getCurrentContext();
+            }
+
+            let graph_share_url = site_user_url + '?';
+
+            if (userFactory.getBackground()) {
+                graph_share_url += 'background=' + userFactory.getBackground() + '&';
+            }
+
+            if (userFactory.getGraphOption('abstract') == 'true') {
+                graph_share_url += '&abstract=true&hide_always=1&';
+            }
+
+            if (userFactory.getMostInfluential()) {
+                graph_share_url += '&most_influential=' + userFactory.getMostInfluential() + '&';
+            }
+
+            if (userFactory.getMaxNodes()) {
+                graph_share_url += '&maxnodes=' + userFactory.getMaxNodes() + '&';
+            }
+
+            let privacy_iframe = "<iframe width='100%' height='500' style='height: 500px' src='https://" + graph_share_url + "hide_always=1&link_hashtags=1&background=" + userFactory.getBackground() + "&maxnodes=" + userFactory.getMaxNodes() + "' frameborder='0' allowfullscreen></iframe>";
+
+            this.generateShareLink = function () {
+                let privacyform = '';
+                if (userFactory.isContextPublic() == true) {
+                    privacyform = $('<span><form action="/context" name="privacycontext" method="post" class="pure-form"><input type="hidden" name="context" value="<%= context %>">This context can be viewed on:<br><input type="text" id="embedurl" size="25" maxlength="80" class="pure-input" value="https://' + graph_share_url + '"><br><br>Embed code for websites:<br><input type="text" id="embedcode" size="25" maxlength="100" class="pure-input" value="' + privacy_iframe + '"><br><br><input type="submit" id="privacybutton" name="privacy" value="make private"></form></span>');
+                }
+                else if (userFactory.isLoggedIn() == true && userFactory.isInContext() == true) {
+                    privacyform = $('<span><form action="/context" name="privacycontext" method="post" class="pure-form"><input type="hidden" name="context" value="<%= context %>">This context is currently private and cannot be seen by the public.<br><br><input type="submit" id="privacybutton" name="privacy" value="make public"></form></span>');
+                }
+                return privacyform;
+            }
+
+            let collaborate_message = 'Collaborate with somebody else on the graph, just send them the link below:<br>';
+            let collaborate_html = '<span><form class="pure-form">' + collaborate_message + '<input type="text" id="collaburl" size="22" maxlength="80" class="pure-input" value="http://' + site_user_url + '/edit?collaborate=' + collabFactory.getCollabId() + '"></form></span>';
+            let collaborate_content = $(collaborate_html);
+
+            this.generateCollabLink = function () {
+                return collaborate_content;
+            }
+            
+        }
+
+        return new GraphShareConstructor();
+
+    })();
+
+
+    // Tooltipster for the graph share button
+
+    $('#privacy-link').tooltipster({
+        theme: 'tooltipster-noir',
+        position: 'right',
+        maxWidth: 220,
+        interactive: true,
+        content: graphShareConstructor.generateShareLink(),
+        functionReady: function() {
+            $('#embedurl').focus(function(event) {
+                setTimeout(function() {$('#embedurl').select();}, 0);
+            });
+            $('#embedcode').focus(function(event) {
+                setTimeout(function() {$('#embedcode').select();}, 0);
+            });
+        }
+    });
+
+
+    // For collaboration - Socket.IO chat
+
+    $('#collaborate-link').tooltipster({
+        theme: 'tooltipster-noir',
+        position: 'top-right',
+        maxWidth: 220,
+        interactive: true,
+        content: graphShareConstructor.generateCollabLink(),
+        functionReady: function() {
+            $('#collaburl').focus(function(event) {
+                this.setSelectionRange(0, 9999);
+            });
+        }
+    });
+
+
+
+</script>

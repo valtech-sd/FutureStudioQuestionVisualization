@@ -1,0 +1,19 @@
+{
+  "name": "questionair_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:publish": "npm install && node src/publish.js",
+    "start:consume": "npm install && node src/consume.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amqp-cacoon": "^2.0.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
+  }
+}

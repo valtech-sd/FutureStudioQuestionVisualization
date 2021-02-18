@@ -1,0 +1,290 @@
+<script>
+      
+
+function GlobalSearch() {
+
+    let defaultSearchQuery = '';
+
+    this.populateGlobalSearch = function(degree_nodes) {
+        
+      let topInfluenceNodes = graphFactory.getTopBCNodes(4);
+
+      for (var ind in topInfluenceNodes) {
+          defaultSearchQuery += topInfluenceNodes[ind].label + '+';
+      }
+
+      defaultSearchQuery = defaultSearchQuery.slice(0, -1);
+
+      //$("#globalsearchinput").attr("placeholder", defaultSearchQuery.replace(/\+/g, " "));
+
+      //$("#globalsearchinput").attr("placeholder", 'search...');
+
+    }
+
+    this.getDefaultSearchQuery = function() {
+      return defaultSearchQuery;
+    }
+
+
+    this.activateRemoveResults = function() {
+      $("#globalsearchremove").show();
+      $('#globalsearchremove').addClass('loadingwheel');
+
+    }
+
+    this.loadedRemoveResults = function() {
+      $('#globalsearchremove').removeClass('loadingwheel');
+      $("#globalsearchremove").show();
+    }
+
+
+    this.deactivateRemoveResults = function() {
+      $("#globalsearchremove").hide();
+    }
+
+}
+
+let globalSearch = new GlobalSearch();
+
+
+if (userFactory.getViewOption('showcontexts')) {
+  globalSearch.loadedRemoveResults();
+}
+
+
+function globalSearchForm() {
+  return {
+      submit: function(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        var squery = '';
+      
+        let pinnedNodes = [];
+
+        let search_input = $('#globalsearchinput').val();
+    
+        if (search_input.length > 0) {
+
+          pinnedNodes = graphFactory.getPinnedNodes();
+
+          if (pinnedNodes.length > 0) {
+            // Let's formulate the query
+            for (var i = 0; i < pinnedNodes.length; i++) {
+              squery += pinnedNodes[i] + '+';
+            }
+          }
+          else {
+            let search_array = [];
+            search_array = search_input.toLowerCase().split(' ');
+            let search_array_clean = search_array.filter(function (el) {
+                                        if (el != null && el != undefined && el != '' ) return el;
+                                      });
+            for (let item in search_array_clean) {
+              if (search_array_clean[item].substr(0,1) == '#') search_array_clean[item] = search_array_clean[item].substr(1);
+              squery += search_array_clean[item] + '+';
+            }
+            pinnedNodes = search_array_clean;
+            graphFactory.initPinnedNodes(search_array_clean);
+          }
+          
+        }
+        else {
+          squery = globalSearch.getDefaultSearchQuery();
+          pinnedNodes = squery.split('+');
+          graphFactory.initPinnedNodes(pinnedNodes);
+        }
+
+        squery = squery.slice(0, -1);
+
+
+        findContexts(squery, pinnedNodes);
+
+      }
+  }
+}
+
+// What happens when we search for a node in the graph?
+
+$("#globalsearchbutton").on('click', function(e) {
+  if ($('#globalsearchinput').is(":visible")) {
+        globalSearchForm().submit(e);
+  }
+  else {
+    $('#globalsearchinput').show();
+  }
+});
+
+$("#globalsearchremove").on('click', function(e) {
+        
+        graphFactory.removeGraphContextNodes();
+        globalSearch.deactivateRemoveResults();
+
+});
+
+$('#globalsearchform').submit(function(e) {
+
+      globalSearchForm().submit(e);
+
+});
+
+
+$("#globalsearchinput").bind("focus", function() {
+  autoComplete('#globalsearchinput',graphFactory.getNodeNames());
+});
+
+
+function nodeInputField() {
+  return {
+    update: function(content) {
+        
+        // Add the selected node into the search panel of the graph
+
+        
+            $('#globalsearchinput').val(arrayToHashtagString(content));
+        
+
+    }
+  }
+}
+
+function findContexts(squery, pinnedNodes) {
+
+    let current_user = userFactory.getCurrentUser();
+    let current_context = userFactory.getCurrentContext();
+
+    globalSearch.activateRemoveResults();
+       
+    $.getJSON("/api/" + current_user + "/connectedcontexts/?keywords=" + squery + "&user=" + current_user, function( data ) {
+                          
+        var sitems = [];
+        
+        $.each( data.slice(0,7), function( key, val ) {
+
+            let furl = "/" + current_user + "/" + val.name;
+            
+            sitems.push({name: val.name, id: val.uid, url: furl});
+        });
+
+        let total_items = sitems.length;
+        let previous_contexts = [];
+        
+        if (total_items > 0) {
+            for (let item in sitems) {
+
+                let context = {label: sitems[item].name, id: sitems[item].id, url: sitems[item].url};
+
+                graphFactory.addGraphContextNode(context, current_context);
+                globalSearch.loadedRemoveResults();
+
+                if (previous_contexts.length > 0) {
+                  for (let prcontext in previous_contexts) {
+                      graphFactory.addGraphContextEdge(context, previous_contexts[prcontext]);
+                  }
+                }
+                
+                previous_contexts.push(context);
+
+                for (let pin in pinnedNodes) {
+                  let node = {id: graphFactory.getNodeID(pinnedNodes[pin])}
+                  graphFactory.addGraphContextEdge(context, node);
+                }
+
+            }
+        }
+        else {
+          globalSearch.deactivateRemoveResults();
+          voiceInputPanel().showMessage('Nothing found in your graphs. Try to select some nodes on the graph and then search again. Or add more graphs first.', 5000);
+        }
+
+        graph().refreshGraph();       
+        
+        // TODO temporarily disabled below — search only for own texts
+
+        //    // Request user's context graphs (texts) which contain either the top nodes or the selected ones
+        // $.getJSON("/api/connectedcontexts/?keywords=" + squery, function( data ) {
+                  
+        //           var oitems = [];
+
+        //           $.each( data.slice(0,7), function( key, val ) {
+                    
+        //             let furl = "/" + val[1] + "/" + val[0].name;
+
+        //             oitems.push({name: val[0].name + ', by ' + val[1], id: val[0].uid, uid: val[1], url: furl});
+
+        //           });
+
+        //           // TODO BUG this works too slow on the production server
+
+        //           // let total_items = sitems.length;
+        //           // let previous_contexts = [];
+                  
+        //           // if (total_items > 0) {
+        //           //     for (let item in sitems) {
+
+        //           //         let context = {label: sitems[item].name, id: sitems[item].id, url: sitems[item].url};
+
+        //           //         graphFactory.addGraphContextNode(context);
+        //           //         globalSearch.activateRemoveResults();
+
+        //           //         if (previous_contexts.length > 0) {
+        //           //           for (let prcontext in previous_contexts) {
+        //           //               graphFactory.addGraphContextEdge(context, previous_contexts[prcontext]);
+        //           //           }
+        //           //         }
+                          
+        //           //         previous_contexts.push(context);
+
+        //           //         for (let pin in pinnedNodes) {
+        //           //           let node = {id: graphFactory.getNodeID(pinnedNodes[pin])}
+        //           //           graphFactory.addGraphContextEdge(context, node);
+        //           //         }
+
+        //           //     }
+        //           // }
+
+        //           let total_oitems = oitems.length;
+        //           let previous_ocontexts = [];
+                  
+        //           if (total_oitems > 0) {
+        //               for (let item in oitems) {
+
+        //                   let context = {label: oitems[item].name, id: oitems[item].id, uid: oitems[item].uid, url: oitems[item].url};
+
+        //                   graphFactory.addGraphContextNode(context)
+
+        //                   if (previous_ocontexts.length > 0) {
+        //                     for (let prcontext in previous_ocontexts) {
+        //                         if (context.uid == previous_ocontexts[prcontext].uid) {
+        //                           graphFactory.addGraphContextEdge(context, previous_ocontexts[prcontext]);
+        //                         }
+        //                     }
+        //                   }
+
+        //                   previous_ocontexts.push(context);
+
+        //                   for (let pin in pinnedNodes) {
+        //                     let node = {id: graphFactory.getNodeID(pinnedNodes[pin])}
+        //                     graphFactory.addGraphContextEdge(context, node);
+        //                   }
+
+        //               }
+        //           }
+
+        //           graph().refreshGraph();                
+        // });
+
+  
+
+    });
+
+
+
+}
+
+
+       
+
+</script>
+

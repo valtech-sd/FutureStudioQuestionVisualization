@@ -1,0 +1,1244 @@
+
+
+
+:root {
+    --menu-link-background:  rgba(0,0,0,0.7);
+    --menu-link-hover: #000;
+    --statements-toggle-opacity: 1;
+    --statements-toggle-background-image: url('/images/close.png');
+    --graph-link-background-image:  url('/images/graphnet.png');
+    --graph-link-opacity: 1;
+    --improve-layout-opacity: 1;
+    --improve-layout-background-image: url('/images/location-precise.png')!important;
+    --abstract-layout-opacity: 1;
+    --abstract-layout-background-image: url('/images/diamond.png')!important;
+    --walkthrough-button-opacity: 1;
+    --walkthrough-button-background-image: url('/images/question.png')!important;
+
+    --manual-button-opacity: 1;
+    --manual-button-background-image: url('/images/manual.png')!important;
+
+    --adjustsettings-button-opacity: 0.8;
+    --adjustsettings-button-background-image: url('/images/settings.png')!important;
+
+    --themeswitch-button-opacity: 0.6;
+    --themeswitch-button-background-image: url('/images/theme.png')!important;
+    
+    --deletecontextbutton-opacity: 1;
+    --deletecontextbutton-background-image: url('/images/trash.png')!important;
+
+    --collaborate-link-opacity: 0.7;
+    --collaborate-link-background-image: url('/images/group.png')!important;
+
+    --import-link-opacity: 1;
+    --import-link-background-image: url('/images/telescope.png')!important;
+
+    --windowdown-link-opacity: 1;
+    --windowdown-link-background-image: url('/images/closewindow.png')!important;
+
+    --statements-link-opacity: 1;
+    --statements-link-background-image: url('/images/square.png')!important;
+
+    --timer-link-opacity: 1;
+    --timer-link-background-image: url('/images/timer.png')!important;
+
+    --watch-link-opacity: 1;
+    --watch-link-background-image: url('/images/watch.png')!important;
+
+    --microphone-link-opacity: 1;
+    --microphone-link-background-image: url('/images/microphone.png')!important;
+
+    --addcontext-link-opacity: 1;
+    --addcontext-link-background-image: url('/images/intersect.png')!important;
+
+
+    --diffcontext-link-opacity: 0.9;
+    --diffcontext-link-background-image: url('/images/diff.png')!important;
+
+    --privacy-link-share-image: url('/images/share.png');
+    --privacy-link-share-opacity: 0.9;
+
+
+    --google-import-opacity: 1;
+    --google-import-background-image: url('/images/import-google.png')!important;
+
+    --file-import-opacity: 1;
+    --file-import-background-image: url('/images/import-file.png')!important;
+}
+
+:root[theme='dark'] {
+    --menu-link-background: rgba(250, 250, 250, 0.4);
+    --menu-link-hover: #444;
+    --statements-toggle-opacity: 0.6;
+    --statements-toggle-background-image: url('/images/closewhite.png');
+    --graph-link-background-image:  url('/images/graphnet-white.png');
+    --graph-link-opacity: 0.8;
+    --improve-layout-opacity: 0.6;
+    --improve-layout-background-image: url('/images/location-precise-white.png')!important;
+    --abstract-layout-opacity: 0.6;
+    --abstract-layout-background-image: url('/images/diamond-white.png')!important;
+    --walkthrough-button-opacity: 0.6;
+    --walkthrough-button-background-image: url('/images/question-white.png')!important;
+
+
+    --manual-button-opacity: 0.8;
+    --manual-button-background-image: url('/images/manual-white.png')!important;
+
+    --adjustsettings-button-opacity: 0.6;
+    --adjustsettings-button-background-image: url('/images/settings-white.png')!important;
+
+    --themeswitch-button-opacity: 0.6;
+    --themeswitch-button-background-image: url('/images/theme-white.png')!important;
+
+    --deletecontextbutton-opacity: 0.6;
+    --deletecontextbutton-background-image: url('/images/trash-white.png')!important;
+
+    --collaborate-link-opacity: 0.6;
+    --collaborate-link-background-image: url('/images/group-white.png')!important;
+
+    --import-link-opacity: 0.6;
+    --import-link-background-image: url('/images/telescope-white.png')!important;
+
+    --windowdown-link-opacity: 0.6;
+    --windowdown-link-background-image: url('/images/closewindow-white.png')!important;
+
+    --statements-link-opacity: 0.8;
+    --statements-link-background-image: url('/images/square-white.png')!important;
+
+    --timer-link-opacity: 0.8;
+    --timer-link-background-image: url('/images/timer-white.png')!important;
+
+    --watch-link-opacity: 0.6;
+    --watch-link-background-image: url('/images/watch-white.png')!important;
+
+    --microphone-link-opacity: 0.6;
+    --microphone-link-background-image: url('/images/microphone-white.png')!important;
+
+    --addcontext-link-opacity: 0.6;
+    --addcontext-link-background-image: url('/images/intersect-white.png')!important;
+
+
+    --diffcontext-link-opacity: 0.6;
+    --diffcontext-link-background-image: url('/images/diff-white.png')!important;
+
+    --privacy-link-share-image: url('/images/share-white.png');
+    --privacy-link-share-opacity: 0.6;
+
+    --google-import-opacity: 1;
+    --google-import-background-image: url('/images/import-google.png')!important;
+
+    --file-import-opacity: 1;
+    --file-import-background-image: url('/images/import-file.png')!important;
+}
+
+
+.pure-img-responsive {
+    max-width: 100%;
+    height: auto;
+}
+
+#layout {
+    position: absolute;
+    padding-left: 0;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    height: 100%;
+}
+#layout.active {
+    
+    left: 180px;
+}
+
+#layout.active #menu {
+    left: 180px;
+    width: 180px;
+}
+
+#layout.active .menu-link {
+    left: 180px;
+}
+
+#layout.sidebar {
+    right: 450px;
+}
+
+#manualFrame {
+    position: absolute;
+    display: none;
+    width: 449px;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    border-left:1px solid #ccc;
+    -webkit-overflow-scrolling: touch;
+}
+
+#insideIFrame {
+    height: 100%;
+    background:'';
+}
+
+#loadingMes {
+    position: absolute;
+    transform: translate(-50%,-57%);
+    left: 50%;
+    top: 57%;
+}
+
+
+/*
+The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
+appears on the left side of the page.
+*/
+
+#panelControllers {
+  position: relative;
+  margin-left: -30px;
+  height: 30px;
+}
+
+#panelControllers ul li {
+  float: left;
+  padding-right: 10px;
+  list-style: none;
+}
+
+
+
+
+#menu {
+    margin-left: -180px; /* "#menu" width */
+    width: 180px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: #191818;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 3147483738;
+}
+    /*
+    All anchors inside the menu should be styled like this.
+    */
+    #menu a {
+        color: #999;
+        border: none;
+        padding: 0.6em 0 0.6em 0.6em;
+    }
+
+    /*
+    Remove all background/borders, since we are applying them to #menu.
+    */
+     #menu .pure-menu,
+     #menu .pure-menu ul {
+        border: none;
+        background: transparent;
+    }
+
+    /*
+    Add that light border to separate items into groups.
+    */
+    #menu .pure-menu ul,
+    #menu .pure-menu .menu-item-divided {
+        border-top: 1px solid #333;
+    }
+        /*
+        Change color of the anchor links on hover/focus.
+        */
+        #menu .pure-menu li a:hover,
+        #menu .pure-menu li a:focus {
+            background: #333;
+        }
+
+    #menu .menu-item-small {
+        font-size: 80%;
+    }
+
+    /*
+    This styles the selected menu item `<li>`.
+    */
+    #menu .pure-menu-selected,
+    #menu .pure-menu-heading {
+        background: #1f8dd6;
+    }
+        /*
+        This styles a link within a selected menu item `<li>`.
+        */
+        #menu .pure-menu-selected a {
+            color: #fff;
+        }
+
+    /*
+    This styles the menu heading.
+    */
+    #menu .pure-menu-heading {
+        font-size: 110%;
+        color: #fff;
+        margin: 0;
+    }
+
+/* -- Dynamic Button For Responsive Menu -------------------------------------*/
+
+/*
+The button to open/close the Menu is custom-made and not part of Pure. Here's
+how it works:
+*/
+
+/*
+`.menu-link` represents the responsive menu toggle that shows/hides on
+small screens.
+*/
+.menu-link {
+    position: fixed;
+    display: block; /* show this only on small screens */
+    top: 0;
+    left: 0; /* "#menu width" */
+    
+    background: var(--menu-link-background);
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 2em;
+    height: auto;
+    padding: 2.1em 1.6em;
+    z-index: 10;
+}
+
+    .menu-link:hover,
+    .menu-link:focus {
+        background: var(--menu-link-hover);
+    }
+
+    .menu-link span {
+        position: relative;
+        display: block;
+    }
+
+    .menu-link span,
+    .menu-link span:before,
+    .menu-link span:after {
+        background-color: #fff;
+        width: 100%;
+        height: 0.2em;
+    }
+
+        .menu-link span:before,
+        .menu-link span:after {
+            position: absolute;
+            margin-top: -0.6em;
+            content: " ";
+        }
+
+        .menu-link span:after {
+            margin-top: 0.6em;
+        }
+
+
+
+
+
+
+       #topnav  {
+         top: 0;
+         left: 0;
+         padding-left: 50px;
+         padding-top: 1px;
+         padding-bottom: 15px;
+       }
+
+       #topnav .pure-menu.pure-menu-open.pure-menu-horizontal li  {
+         border-radius: 15px!important;
+       }
+
+
+
+
+
+
+#controls {
+    position: absolute;
+    display: block;
+    top: 40px;
+    right: 0px;
+}
+
+#statements-toggle {
+    position: absolute;
+    display: inline; /* show this only on small screens */
+    top: 0;
+    right: 0; /* "#menu width" */
+    background: none;
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 2em;
+    height: auto;
+    float: right;
+    padding: 3.3em 1.6em;
+    z-index: 10;
+    background-image: var(--statements-toggle-background-image);
+    opacity: var(--statements-toggle-opacity);
+    background-repeat: no-repeat;
+    background-position:center;
+    pointer-events: auto!important;
+}
+
+
+
+
+#statements-link {
+    position: absolute;
+    display: inline; /* show this only on small screens */
+    top: 40px;
+    left: 0; /* "#menu width" */
+    background: none;
+    text-align: left;
+    font-size: 32px; /* change this value to increase/decrease button size */
+    width: 32px;
+    height: 32px;
+    /* float: right; */
+    padding: 5px 5px;
+    z-index: 10;
+    background-image: var(--statements-link-background-image);
+    opacity: var(--statements-link-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+    pointer-events: auto!important;
+}
+
+
+#timer-link {
+    position: absolute;
+    display: inline; /* show this only on small screens */
+    top: 160px;
+    left: 0; /* "#menu width" */
+    background: none;
+    text-align: left;
+    font-size: 32px; /* change this value to increase/decrease button size */
+    width: 32px;
+    height: 32px;
+    /* float: right; */
+    padding: 5px 5px;
+    z-index: 10;
+    background-image: var(--timer-link-background-image);
+    opacity: var(--timer-link-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+    pointer-events: auto!important;
+}
+
+
+
+.timer-link-on {
+    background-image: url('/images/timer-blue.png')!important;
+}
+
+#watch-link {
+    position: absolute;
+    display: inline; /* show this only on small screens */
+    top: 200px;
+    left: 0; /* "#menu width" */
+    background: none;
+    text-align: left;
+    font-size: 32px; /* change this value to increase/decrease button size */
+    width: 32px;
+    height: 32px;
+    /* float: right; */
+    padding: 5px 5px;
+    z-index: 10;
+    background-image: var(--watch-link-background-image);
+    opacity: var(--watch-link-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+    pointer-events: auto!important;
+}
+
+
+.watch-link-on {
+    opacity: 0.8;
+    background-image: url('/images/watch-blue.png')!important;
+}
+
+.statements-link-on {
+    background-image: url('/images/squareplus.png')!important;
+}
+
+.statements-link-on-dark {
+    opacity: 0.8;
+    background-image: url('/images/squareplus-white.png')!important;
+}
+
+
+#google-import {
+        position: relative;
+        
+        left: 0; /* "#menu width" */
+        text-align: right;
+        padding-top: 7px;
+        padding-bottom: 6px;
+        padding-left: 20px;
+        padding-right: 10px;
+        background-color: #f5f5f5;
+        color: #666;
+        font: 13px 'IstokWeb-Regular',sans-serif;
+        /* width: 32px;
+        height: 32px;
+        float: right; */
+        z-index: 10;
+        background-image: var(--google-import-background-image);
+        opacity: var(--google-import-link-opacity); 
+        background-repeat: no-repeat!important;
+        display: inline-block;
+        float: right;
+        width: 53px;
+        background-position: 5px 4px; 
+        /* pointer-events: auto!important;   */
+}
+
+#google-import:hover {
+    background-color: #efefef;
+}
+
+#file-import {
+        position: relative;
+        left: 0; /* "#menu width" */
+        text-align: right;
+        padding-top: 7px;
+        padding-bottom: 6px;
+        padding-left: 20px;
+        padding-right: 10px;
+        margin-left: 5px;
+        background-color: #f5f5f5;
+        color: #666;
+        font: 13px 'IstokWeb-Regular',sans-serif;
+        /* width: 32px;
+        height: 32px;
+        float: right; */
+        z-index: 10;
+        background-image: var(--file-import-background-image);
+        opacity: var(--file-import-link-opacity); 
+        background-repeat: no-repeat!important;
+        display: inline-block;
+        width: 30px;
+        float: right;
+        background-position: 5px 4px; 
+        /* pointer-events: auto!important;   */
+}
+
+#file-import:hover {
+    background-color: #efefef;
+}
+
+
+#windowdown-link {
+    position: absolute;
+    display: inline; /* show this only on small screens */
+    top: 0;
+    right: 35px; /* "#menu width" */
+    background: none;
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 2em;
+    height: auto;
+    float: right;
+    padding: 3.3em 1.6em;
+    z-index: 10;
+    background-image: var(--windowdown-link-background-image);
+    opacity: var(--windowdown-link-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+    pointer-events: auto!important;
+}
+
+
+#deletecontext {
+    position: absolute;
+    display: inline; /* show this only on small screens */
+ 
+}
+
+
+#deletebutton {
+    background: url('/images/trash.png');
+    background-repeat:no-repeat;
+    background-position:center;
+    border: 0;
+    display: inline-block;
+    height: 23px;
+    width: 23px;
+    text-indent:-9999px;
+    line-height: 0px;
+    font-size: 0px;
+    position: relative;
+    top: -5px;
+}
+.deletebutton-dark {
+
+    background-image: url('/images/trash-white.png')!important;
+}
+
+#deletecontextbutton {
+    position: absolute;
+    display: inline; /* show this only on small screens */
+    top: 330px;
+    left: 5px; /* "#menu width" */
+    text-align: left;
+    font-size: 32px; /* change this value to increase/decrease button size */
+    width: 32px;
+    height: 32px;
+    border: 0;
+    /* float: right; */
+    padding: 5px 5px;
+    z-index: 10;
+    background: none;
+    background-image: var(--deletecontextbutton-background-image);
+    opacity: var(--deletecontextbutton-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+    pointer-events: auto!important;
+    text-indent:-9999px;
+    line-height: 0px;
+    font-size: 0px;
+}
+
+
+#privacy-link {
+    position: absolute;
+    display: inline; /* show this only on small screens */
+    top: 240px;
+    left: 0; /* "#menu width" */
+    text-align: left;
+    font-size: 32px; /*   this value to increase/decrease button size */
+    width: 32px;
+    height: 32px;
+    /* float: right; */
+    padding: 5px 5px;
+    z-index: 10;
+    background-image: var(--privacy-link-share-image);
+    opacity: var(--privacy-link-share-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+    pointer-events: auto!important;
+}
+
+#collaborate-link {
+
+    position: absolute;
+    display: inline; /* show this only on small screens */
+    top: 280px;
+    left: 0; /* "#menu width" */
+    background: none;
+    text-align: left;
+    font-size: 32px; /* change this value to increase/decrease button size */
+    width: 32px;
+    height: 32px;
+    /* float: right; */
+    padding: 5px 5px;
+    z-index: 10;
+    background: var(--collaborate-link-background-image);
+    opacity: var(--collaborate-link-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+    pointer-events: auto!important;
+}
+
+
+.is-public {
+    background: url('/images/share-green.png')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+}
+
+.is-collab {
+    background: url('/images/group-green.png')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+}
+
+#import-link {
+    background: var(--import-link-background-image);
+    opacity: var(--import-link-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+    border: 0;
+    position: absolute;
+    display: inline; /* show this only on small screens */
+    bottom: 10px;
+    right: 0px; /* "#menu width" */
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 2em;
+    height: auto;
+    float: right;
+    padding: 3.3em 1.6em;
+    z-index: 10;
+}
+
+
+
+#graph-link {
+
+
+    margin-top: 0px;
+    background: none;
+    position: absolute;
+    display: block;
+    top: 0;
+    right: 0; /* "#menu width" */
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 2em;
+    height: auto;
+    padding: 2.6em 2.6em;
+    z-index: 11;
+    /* background-image: url('../images/chat.png'); */
+    background-image: var(--graph-link-background-image);
+    opacity: var(--graph-link-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+}
+
+
+
+.graph-highlight {
+
+    background: rgba(31,141,214,1)!important;
+    background-image: url('/images/chatwhite.png')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+
+}
+
+
+.graph-highlight:hover {
+
+    background: rgba(0,0,0,0.7)!important;
+    background-image: url('/images/chatwhite.png')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+
+}
+
+#graph-link:hover {
+    background: rgba(0,0,0,0.7);
+    background-image: url('/images/graphnet-white.png');
+    background-repeat:no-repeat;
+    background-position:center;
+}
+
+#microphone-link {
+    display: none;
+    opacity: var(--microphone-link-opacity);
+    position: absolute;
+    top: 370px;
+    left: 0;
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 32px;
+    height: 32px;   
+    font-size: 32px; /* change this value to increase/decrease button size */
+    padding: 5px 5px;
+    z-index: 10;
+    background-image: var(--microphone-link-background-image);
+    background-repeat:no-repeat;
+    background-position:center;
+
+}
+
+#statementmenu {
+    position: fixed;
+    top: 0px;
+}
+
+#addcontext-link {
+
+    position: absolute;
+    top: 80px;
+    left: 0;
+    background: none;
+    text-align: left;
+    font-size: 32px; /* change this value to increase/decrease button size */
+    width: 32px;
+    height: 32px;
+    padding: 5px 5px;
+    z-index: 10;
+    opacity: var(--addcontext-link-opacity);
+    background-image: var(--addcontext-link-background-image);
+    background-repeat:no-repeat;
+    background-position:center;
+    pointer-events: auto!important;
+
+}
+
+.addcontext-on {
+    opacity: 1!important;
+    background-image: url('/images/intersect-active.png')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+}
+
+
+
+.addcontext-visible {
+    background-image: url('/images/intersect-on.png')!important;
+
+}
+
+#diffcontext-link {
+
+    position: absolute;
+    top: 120px;
+    left: 0;
+    background: none;
+    text-align: left;
+    font-size: 32px; /* change this value to increase/decrease button size */
+    width: 32px;
+    height: 32px;
+    padding: 5px 5px;
+    z-index: 10;
+    opacity: var(--diffcontext-link-opacity);
+    background-image: var(--diffcontext-link-background-image);
+    background-repeat:no-repeat;
+    background-position:center;
+    pointer-events: auto!important;
+
+}
+
+.diffcontext-on {
+    opacity: 1!important;
+    background-image: url('/images/diff-active.png')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+}
+
+
+
+.diffcontext-visible {
+    background-image: url('/images/diff-on.png')!important;
+
+}
+
+#improve-layout {
+  position: absolute;
+  top: 85px;
+  font-size: 8px; /* change this value to increase/decrease button size */
+  width: 2em;
+  height: 25px;
+  right: 0; /* "#menu width" */
+  font-size: 8px; /* change this value to increase/decrease button size */
+  /* width: 2em;
+   height: auto;*/
+  padding: 0em 2.5em;
+  z-index: 11;
+  opacity: var(--improve-layout-opacity);
+  background-image: var(--improve-layout-background-image);
+  background-repeat:no-repeat;
+  background-position:center;
+}
+
+
+#abstract-layout {
+  position: absolute;
+  top: 125px;
+  font-size: 8px; /* change this value to increase/decrease button size */
+  width: 2em;
+  height: 25px;
+  right: 0; /* "#menu width" */
+  /* width: 2em;
+   height: auto;*/
+  padding: 0em 2.5em;
+  z-index: 11;
+  background-image: var(--abstract-layout-background-image);
+  opacity: var(--abstract-layout-opacity);
+  background-repeat:no-repeat;
+  background-position:center;
+}
+
+
+
+#walkthrough {
+    position: absolute;
+    top: 205px;
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 2em;
+    height: 25px;
+    right: 0; /* "#menu width" */
+    padding: 0em 2.5em;
+    z-index: 11;
+    background: none;
+    background-image: var(--walkthrough-button-background-image);
+    opacity: var(--walkthrough-button-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+  }
+
+
+  #manualsupport {
+    position: absolute;
+    top:360px;
+    right: 0px;
+    padding: 0px 0px 0px 0px;
+    margin: 0px;
+    width: 50px;
+    height: 150px;
+    background: #288fd4; /* #105bfb; */
+    z-index:15;
+    border-radius: 3px 0px 0px 3px;
+    text-decoration:none!important;
+    opacity: 1;
+  }
+
+  #manualsupport p {
+    font-size: 18px; /* change this value to increase/decrease button size */
+    color: #fff;
+    padding: 5px 0px 0px 10px;
+    -moz-transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+  }
+
+
+#adjustsettings {
+    position: absolute;
+    top: 245px;
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 2em;
+    height: 25px;
+    right: 0; /* "#menu width" */
+    padding: 0em 2.5em;
+    z-index: 11;
+    background: none;
+    background-image: var(--adjustsettings-button-background-image);
+    opacity: var(--adjustsettings-button-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+  }
+
+  #themeswitch {
+    position: absolute;
+    top: 165px;
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 2em;
+    height: 25px;
+    right: 0; /* "#menu width" */
+    padding: 0em 2.5em;
+    z-index: 11;
+    background: none;
+    background-image: var(--themeswitch-button-background-image);
+    opacity: var(--themeswitch-button-opacity);
+    background-repeat:no-repeat;
+    background-position:center;
+  }
+  
+
+
+
+.microphone-on {
+    opacity: 1!important;
+    background-image: url('/images/microphone-blue.png')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+}
+
+.layout-on {
+    opacity: 1!important;
+    background-image: url('/images/location-precise-blue.png')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+}
+
+.abstract-on {
+    opacity: 1!important;
+    background-image: url('/images/diamond-blue.png')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+}
+
+.manual-on {
+    opacity: 0.8!important;
+}
+
+
+#graph-tools {
+    position: absolute;
+    top: 320px;
+    text-align: right;
+    right: -2px; /* "#menu width" */
+    height: 80px;
+    font-size: 8px; /* change this value to increase/decrease button size */
+   /* width: 2em;
+    height: auto;*/
+    padding-top: 0;
+    padding-right: 2.3em;
+    z-index: 11;
+}
+
+#graph-reload {
+    position: fixed;
+    top: 0px;
+    text-align: right;
+    right: -2px; /* "#menu width" */
+    font-size: 8px; /* change this value to increase/decrease button size */
+    /* width: 2em;
+     height: auto;*/
+    padding: 0 2.3em;
+    z-index: 11;
+    margin-top: 6em;
+}
+
+#addcontextinput {
+  padding-bottom: 0.5em;
+
+}
+
+#addcontextbutton {
+  text-decoration: none;
+}
+
+#addcontextname {
+    float: left;
+}
+
+input#addcontextsubmit {
+        position: relative;
+        margin-top: 5px;
+        margin-left: 10px;
+        background:url('/images/save-white.png') no-repeat;
+        cursor:pointer;
+        border:none;
+        width:23px;
+        height:23px;
+        float: none;
+}
+#addcontextbreak {
+    float: none;
+}
+.whiten {
+    color: #cfcfcf!important;
+}
+
+#biascaption {
+    font: 13px 'IstokWeb-Regular',sans-serif;
+    line-height: 15px;
+}
+
+#biascaption:after {
+    content: attr(data-after);
+    font: 13px 'IstokWeb-Bold',sans-serif;
+}
+
+
+
+
+/* -- Responsive Styles (Media Queries) ------------------------------------- */
+
+/*
+Hides the menu at `48em`, but modify this based on your app's needs.
+*/
+@media (min-width: 480em) {
+
+    .content {
+        padding-left: 2em;
+        padding-right: 2em;
+    }
+
+
+    #layout {
+        padding-left: 180px; /* left col width "#menu" */
+        left: 0;
+    }
+    #menu {
+        left: 180px;
+    }
+
+    .menu-link {
+        position: fixed;
+        left: 180px;
+        display: none;
+    }
+
+    #layout.active .menu-link {
+        left: 180px;
+    }
+
+
+
+
+}
+
+
+@media (min-width: 48em) {
+
+
+    #graph-tools {
+        display: block;
+    }
+    #graph-container {
+        /*left: 150px;*/
+    }
+
+
+}
+
+@media (max-width: 460px) {
+
+    #maincontent {
+        max-width: 320px;
+    }
+
+    #manualFrame {
+        position: absolute;
+        display: none;
+        width: 349px;
+        height: 100%;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        overflow-y: auto;
+        border-left:1px solid #ccc;
+        z-index: 400;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #manualsupport {
+        position: absolute;
+        top: 355px;
+        font-size: 8px; /* change this value to increase/decrease button size */
+        width: 2em;
+        height: 25px;
+        right: 0; /* "#menu width" */
+        padding: 0em 2.5em;
+        z-index: 11;
+        background: none;
+        background-image: var(--manual-button-background-image);
+        opacity: var(--manual-button-opacity);
+        background-repeat:no-repeat;
+        background-position:center;
+    }
+
+    #manualsupport p {
+        display: none;
+    }
+
+    .manual-on {
+        opacity: 1!important;
+        background-image: url('/images/manual-blue.png')!important;
+    }
+
+
+    #graph-link {
+        margin-top: 0px;
+        background: none;
+        position: absolute;
+        display: block;
+        top: 0;
+        right: 0; /* "#menu width" */
+        font-size: 8px; /* change this value to increase/decrease button size */
+        width: 2em;
+        height: auto;
+        padding: 2.6em 2.6em;
+        z-index: 11;
+        background-image: url('/images/graphnet.png');
+        background-repeat:no-repeat;
+        background-position:center;
+    }
+
+    #graph-link:hover {
+        background: rgba(0,0,0,0.1);
+        background-image: url('/images/graphnet.png');
+        background-repeat:no-repeat;
+        background-position:center;
+    }
+
+    #statements-toggle {
+        /* display:none; */
+    }
+
+
+    /* #windowdown-link {
+        right: 0;
+
+    } */
+
+    #entryform {
+        max-width: 310px;
+    }
+    #analytics {
+      background-color: rgba(250, 250, 250, 0.9);
+
+      display:none;
+    }
+
+    #importpane::before { 
+        content: "";
+        padding-right: 3px;
+    }
+
+
+    #google-import {
+        font: 13px 'IstokWeb-Regular',sans-serif;
+        width: 50px;
+       
+    }
+
+
+    #file-import {
+        font: 13px 'IstokWeb-Regular',sans-serif;
+        position: relative;
+        width: 30px;
+    }
+
+    textarea {
+        max-height: 80px!important;
+    }
+
+
+    #analyticsbutton:after {
+      display:none;
+    }
+
+    #analyticscaption {
+
+    display: none!important;
+
+    }
+
+    #import-link {
+
+        bottom: 10px;
+        right: 135px; /* "#menu width" */
+
+    }
+
+
+    #collaborate-link {
+
+        bottom: 10px;
+        right: 170px; /* "#menu width" */
+
+    }
+
+    #globalsearchinput { 
+        display: none;
+    }
+
+
+
+
+
+
+
+
+
+}
+
+@media (max-width: 600px) {
+
+    #globalsearchinput { 
+        display: none;
+    }
+
+    #topnav {
+        font: 11px 'IstokWeb-Bold',sans-serif;
+    }
+  
+
+}

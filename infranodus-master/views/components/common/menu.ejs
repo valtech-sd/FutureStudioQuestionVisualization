@@ -1,0 +1,51 @@
+<div id="menu">
+    <div class="pure-menu pure-menu-open">
+
+        <% if (locals.user) { %>
+        <a class="pure-menu-heading" href="/<%= user.name %>/edit"><%= user.name %></a>
+        <ul id="contexts" class="contexts">
+          <li>&nbsp;</li>
+            <li class="menu-item-small"><a href="/">infranodus.com</a></li>
+            <li class="menu-item-small"><a href="/apps">apps/home</a></li>
+            <li class="menu-item-small" id="settingspane"><a href="/settings">settings</a></li>
+            <br>
+            <li id="addNewContext" class="menu-item-divided"><a id="addcontextbutton" href="javascript:" class="whiten"> + add new graph&nbsp;&nbsp;</a><form action="/post" method="GET" class="pure-form" id="addcontextinput"><input type="text" id="addcontextname" size="8" class="pure-input"><input id="addcontextsubmit" type="submit" value="">&nbsp;&nbsp;</form></li>
+            <li class="menu-item-divided"><a href="/<%= user.name %>/edit?showcontexts=1" class="whiten">see all graphs</a></li>
+            <% if (contextlist && contextlist.length > 0) { %>
+            <% contextlist.forEach(function(contextlabel) { %>
+                  <li class="menu-item-divided"><a href="/<%= user.name %>/<%= contextlabel[0] %>/edit"><%= contextlabel[0] %></a></li>
+            <% }); %>
+            <% } %>
+            <li>&nbsp;</li>
+            <li class="menu-item-divided"><a href="/import">import</a></li>
+            <li class="menu-item-small">&nbsp;</li>
+            <li class="menu-item-divided"><a href="/#tutorials">tutorials</a></li>
+            <li class="menu-item-small">&nbsp;</li>
+            <li class="menu-item-small"><a href="http://noduslabs.com/infranodus/" target="_blank">about</a></li>
+            <li class="menu-item-small"><a href="/#usecases">case studies</a></li>
+            <li class="menu-item-small"><a href="https://help.infranodus.com">manual + support</a></li>
+            <li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">github</a></li>
+            <li class="menu-item-small"><a href="http://noduslabs.com/contact/" target="_blank">contact</a></li>
+            <li>&nbsp;</li>
+            <li><a href="/logout">logout</a></li>
+            <li>&nbsp;</li>
+            <li>&nbsp;</li>
+        </ul>
+        <% } else { %>
+        <a class="pure-menu-heading" href="/">infranodus</a>
+        <ul>
+            <li><a href="/login">login</a></li>
+            <li><a href="/signup">sign up</a></li>
+            <li>&nbsp;</li>
+            <li>&nbsp;</li>
+            <li class="menu-item-small"><a href="http://noduslabs.com/infranodus/" target="_blank">about</a></li>
+            <li class="menu-item-small"><a href="/#features">demo</a></li>
+            <li class="menu-item-small"><a href="/#usecases">case studies</a></li>
+            <li class="menu-item-small"><a href="https://help.infranodus.com">manual + support</a></li>
+            <li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">github</a></li>
+            <li class="menu-item-small"><a href="http://noduslabs.com/contact/" target="_blank">contact</a></li>
+        </ul>
+        <% } %>
+
+    </div>
+</div>

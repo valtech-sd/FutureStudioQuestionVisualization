@@ -1,0 +1,12 @@
+.DS_Store
+.idea/
+lib/sandbox
+*.log
+
+# NPM
+node_modules
+node_modules.backup
+npm-debug.log*
+
+# Vagrant
+.vagrant

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %>: InfraNodus</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
+    <link rel='stylesheet' href='/stylesheets/jquery.textcomplete.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
+    <link rel="stylesheet" href="/stylesheets/jquery-ui.min.css">
+    <script src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="infranodus"></script>
+    <% include statsheader %>
+
+</head>
+<body>
+
+<% include statsabove %>
+
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+    <%- include('components/common/menu') %>
+
+    <div id="main">
+
+
+        <div id="content">
+            <div id="settingsmain">
+
+
+                <% include messages %>
+                <% console.log(user) %>
+                <form action='/settings' method='post' id="settingsform" class="pure-form pure-form-stacked">
+
+                    <legend>Settings for User: <i><%= user.name %></i></legend>
+                    <br>
+
+
+                    <legend>Language Settings:</legend>
+
+                    Text input language and lemmatization<br>
+                    <label for="inlanguage" class="pure-input">
+                      We will convert your words to lemmas (taken &#8594; take) based on the dictionary below. This setting also applies to voice-to-text input. You can also choose to switch auto-detection off and add any words you want.
+                      <br>&nbsp;<br>
+                      <select id="inlanguage" name="inlanguage">
+                      <option value="auto" <% if (user.inlanguage=='auto' || user.inlanguage == undefined) { %> selected <% } %>>Auto-Detect</option>
+                      <option value="zz" <% if (user.inlanguage=='zz') { %> selected <% } %>>Do not detect</option>
+                      <option disabled>-- Recommended: --</option>
+                      <option value="en" <% if (user.inlanguage=='en') { %> selected <% } %>>English</option>
+                      <option value="ru" <% if (user.inlanguage=='ru') { %> selected <% } %>>Russian</option>
+                      <option value="fr" <% if (user.inlanguage=='fr') { %> selected <% } %>>French</option>
+                      <option value="de" <% if (user.inlanguage=='de') { %> selected <% } %>>German</option>
+                      <option disabled>-- For researchers only: --</option>
+                      <option value="ep" <% if (user.inlanguage=='ep') { %> selected <% } %>>English (Porter Stemmer)</option>
+                      <option value="pp" <% if (user.inlanguage=='pp') { %> selected <% } %>>Portugese (Porter Stemmer)</option>
+                      <option value="sp" <% if (user.inlanguage=='sp') { %> selected <% } %>>Spanish (Porter Stemmer)</option>
+                      <option value="vp" <% if (user.inlanguage=='vp') { %> selected <% } %>>Swedish (Porter Stemmer)</option>
+                      </select>
+                      <br>To learn more about the text processing algorithm used in InfraNodus and for citations, see our <a href="https://noduslabs.com/research/pathways-meaning-circulation-text-network-analysis/">research paper</a>. 
+                    </label>
+                    <br>
+
+                    <button type='submit' class="pure-button pure-button-primary">Save Settings</button>
+
+                    <legend>&nbsp;</legend>
+
+                    <legend>Graph Design Settings:</legend>
+                    Áou can make your graphs as specific and precise or as abstract and beautiful as you wish. These settings will also be used when showing your public graphs.
+                    <br>&nbsp;<br>
+                    Graph color palette
+                    <label for="palette" class="pure-input">
+                      <select id="palette" name="palette">
+                      <option value="default" <% if (user.palette=='default' || user.palette == undefined) { %> selected <% } %>>Default (Color)</option>
+                      <option value="color" <% if (user.palette=='color') { %> selected <% } %>>Subdued Color</option>
+                      <option value="mono" <% if (user.palette=='mono') { %> selected <% } %>>Monochrome</option>
+                      <option value="contrast" <% if (user.palette=='contrast') { %> selected <% } %>>Contrast</option>
+                      </select>
+                    </label>
+                    <br>
+
+                    Background
+                    <label for="background" class="pure-input">
+                      <select id="background" name="background">
+                      <option value="default" <% if (user.background=='default' || user.background == undefined) { %> selected <% } %>>Default (Light)</option>
+                      <option value="dark" <% if (user.background=='dark') { %> selected <% } %>>Dark</option>
+                      </select>
+                    </label>
+                    <br>
+
+                    Show node labels
+                    <label for="label_threshold" class="pure-input">
+                      <select id="label_threshold" name="label_threshold">
+                      <option value="8" <% if (user.label_threshold=='8' || user.label_threshold == undefined) { %> selected <% } %>>For big nodes only</option>
+                      <option value="0" <% if (user.label_threshold=='0') { %> selected <% } %>>For all nodes</option>
+                      </select>
+                    </label>
+                    <br>
+
+                    Abstract the graph (show only edges, no nodes):
+                    <label for="absract" class="pure-input" id="abstractcaption">
+                        <select id="abstract" name="abstract">
+                          <option value="no" <% if ((user.abstract != undefined && user.abstract=='no') || user.abstract == undefined) { %> selected <% } %>>No</option>
+                          <option value="yes" <% if (user.abstract != undefined && user.abstract=='yes') { %> selected <% } %>>Yes</option>
+                        </select>
+                    </label>
+                    <br>
+
+                    Graph view shows only
+                    <label for="wordscan-view1" class="pure-radio">
+                        <input id="wordscan-view1" type="radio" name="fullview" value="0" <% if (user.fullview=='0') { %> checked <% } %>>
+                        "next to" connections (bigrams)
+                    </label>
+
+                    <label for="wordscan-view2" class="pure-radio">
+                        <input id="wordscan-view2" type="radio" name="fullview" value="1" <% if (user.fullview=='1') { %> checked <% } %>>
+                        "near" connections (4-grams + bigrams)
+                    </label>
+                    <br>
+
+                    Graph shows only
+                    <label for="graph-view" class="pure-radio">
+                        <input type="text" id="graph-view" size="4" maxlength="4" class="pure-input" name="maxnodes" placeholder="" value="<% if (!user.maxnodes) { %>100<% } else { %><%=user.maxnodes%><% } %>">
+                        max number of nodes
+                    </label>
+                    <br>
+
+                    Most influential words have
+                    <label for="topnodes" class="pure-input">
+                      <select id="topnodes" name="topnodes">
+                      <option value="bc" <% if (user.topnodes=='bc' || user.topnodes == undefined) { %> selected <% } %>>max betweenness centrality</option>
+                      <option value="bc2" <% if (user.topnodes=='bc2') { %> selected <% } %>>max BC (also for topics)</option>
+                      <option value="degree" <% if (user.topnodes=='degree') { %> selected <% } %>>max degree</option>
+                      </select>
+                      We use graph betweenness centrality to identify the most prominent topics as per <a href="https://noduslabs.com/research/pathways-meaning-circulation-text-network-analysis/">this algorithm</a>. It emphasizes the words that connect different topical clusters (context) of a text together. However, you can also choose to use the node degree (the number of connections), which is closer to co-occurrences.
+                    </label>
+                    <br>
+
+                    <button type='submit' class="pure-button pure-button-primary">Save Settings</button>
+
+                    <legend>&nbsp;</legend>
+
+                    <legend>Text Processing Settings:</legend>
+                    By default we use a window of 4 words to connect the words into a graph. However, you can choose to only connect the words that are next to each other. 
+                    <br>&nbsp;<br>
+                    Words connect into graph, when they are
+                    <label for="wordscan-edit-1" class="pure-radio">
+                        <input id="wordscan-edit-1" type="radio" name="fullscan" value="0" <% if (user.fullscan=='0') { %> checked <% } %>>
+                        next to each other (bigrams)
+                    </label>
+
+                    <label for="wordscan-edit-2" class="pure-radio">
+                        <input id="wordscan-edit-2" type="radio" name="fullscan" value="1" <% if (user.fullscan=='1') { %> checked <% } %>>
+                        near each other (4-grams)
+                    </label>
+                    <br>
+
+                    Visualize in the graph
+                    <label for="hashnodes1" class="pure-radio">
+                        <input id="hashnodes1" type="radio" name="hashnodes" value="0" <% if (user.hashnodes=='0') { %> checked <% } %>>
+                        prioritize #hashtags, if none - words
+                    </label>
+
+                    <label for="hashnodes2" class="pure-radio">
+                        <input id="hashnodes2" type="radio" name="hashnodes" value="1" <% if (user.hashnodes=='1') { %> checked <% } %>>
+                        both #hashtags and words
+                    </label>
+
+                    <label for="hashnodes3" class="pure-radio">
+                        <input id="hashnodes3" type="radio" name="hashnodes" value="2" <% if (user.hashnodes=='2') { %> checked <% } %>>
+                        only #hashtags, ignore words
+                    </label>
+
+                    <br>
+                    <button type='submit' class="pure-button pure-button-primary">Save Settings</button>
+
+                    <legend>&nbsp;</legend>
+
+                    <legend>Stopwords Settings:</legend>
+                    Custom stopwords to add to the default list (<a href="/files/stopwords_en_en.txt">en</a>, <a href="/files/stopwords_de_de.txt">de</a>, <a href="/files/stopwords_fr_fr.txt">fr</a>, <a href="/files/stopwords_es_es.txt">es</a>)
+                    (example: "alt, don", to exclude, use a "-", e.g. "-kind, -and")
+                    <label for="stopwords" class="pure-input">
+                        <textarea id="stopwords" name="stopwords" rows="4" cols="20"><% if (user.stopwords != undefined && user.stopwords.length > 0) { %><%= user.stopwords %><% }%></textarea>
+                        By default InfraNodus uses a list of the custom stopwords (links above) and deletes them from the graph. If you don't want some words to be deleted, simply add them above with a minus sign, separated by comma. 
+                        To add some words, simply list them normally, separated by a comma.
+                    </label>
+
+                    <br>
+                    <button type='submit' class="pure-button pure-button-primary">Save Settings</button>
+
+                    <legend>&nbsp;</legend>
+
+                    <legend>Graph Editor Settings:</legend>
+                    InfraNodus is the fastest way to create a graph using text input. Simply add #nodes as #hashtags (to connect to each other) or @mentions (to connect to all the hashtags).<br>
+                    If you don't want the #hashtags to connect to each other, but only to @mentions, change the setting below:
+                    <br><br>
+                    #Hashtags will
+                    <label for="morphemes1" class="pure-radio">
+                        <input id="morphemes1" type="radio" name="morphemes" value="0" <% if (user.morphemes=='0') { %> checked <% } %>>
+                        stay as they are
+                    </label>
+
+                    <label for="morphemes2" class="pure-radio">
+                        <input id="morphemes2" type="radio" name="morphemes" value="1" <% if (user.morphemes=='1') { %> checked <% } %>>
+                        be lemmatized (#bits &#8594; #bit)
+                    </label>
+                    <br>
+
+                    @Mentions will be
+                    <label for="mentions1" class="pure-radio">
+                        <input id="mentions1" type="radio" name="mentions" value="0" <% if (user.mentions=='0' || user.mentions == undefined) { %> checked <% } %>>
+                        left as they are, connected to all the nodes in a statement
+                    </label>
+
+                    <label for="mentions2" class="pure-radio">
+                        <input id="mentions2" type="radio" name="mentions" value="remove" <% if (user.mentions=='remove') { %> checked <% } %>>
+                        the @ sign will be removed from the graph
+                    </label>
+
+                    <label for="mentions3" class="pure-radio">
+                        <input id="mentions3" type="radio" name="mentions" value="link" <% if (user.mentions=='link') { %> checked <% } %>>
+                        the @ sign is removed, each #hashtag  or word connected to @mention but not to each other
+                    </label>
+                    <br>
+                    <button type='submit' class="pure-button pure-button-primary">Save Settings</button>
+
+                    <legend>&nbsp;</legend>
+
+                    <legend>Voice-to-Text Input:</legend>
+
+                    How to submit your speech into graph:
+                    <label for="voice_continues" class="pure-input" id="voicecontinuescaption">
+                        <select id="voice_continues" name="voice_continues">
+                          <option value="00" <% if (user.voice_continues != undefined && user.voice_continues=='00' || user.voice_continues == undefined) { %> selected <% } %>>Automatically on speech pause</option>
+                          <option value="01" <% if (user.voice_continues != undefined && user.voice_continues=='01') { %> selected <% } %>>When you click "Save"</option>
+                          <option value="visualise" <% if (user.voice_continues != undefined && user.voice_continues=='visualise') { %> selected <% } %>>When you say "visualize"</option>
+                          <option value="визуализировать" <% if (user.voice_continues != undefined && user.voice_continues=='визуализировать') { %> selected <% } %>>When you say "визуализировать"</option>
+                        </select>
+                        Works with Google Chrome only at the moment. You can choose whether to add your words when you pause (automatically), or when you click Save or say a certain word. Contact us to add more options.
+                    </label>
+                    <br>
+                    <button type='submit' class="pure-button pure-button-primary">Save Settings</button>
+
+                    <legend>&nbsp;</legend>
+
+
+                    <legend>Customization Settings:</legend>
+
+                    Analytics pane name (branding bottom right corner)
+                    <label for="graph-view" class="pure-radio">
+                        <input type="text" id="customization" size="10" maxlength="20" class="pure-input" name="customization" placeholder="" value="<% if (!user.customization) { %>analytics<% } else { %><%=user.customization%><% } %>">
+                        This is a label for the Analytics pane at the bottom right, but you can also use it to brand your InfraNodus however you want. Good for projecting on big screens.
+                    </label>
+
+                    <br>
+                    <button type='submit' class="pure-button pure-button-primary">Save Settings</button>
+
+                    <legend>&nbsp;</legend>
+
+                
+                    <legend>MIDI Interface Settings:</legend>
+
+                    Activate MIDI Interface?
+                    <label for="midiactive" class="pure-input">
+                      <select id="midiactive" name="midiactive">
+                      <option value="off" <% if (user.midi == 'off' || user.midi == undefined) { %> selected <% } %>>MIDI Deactivated</option>
+                      <option value="on" <% if (user.midi != undefined && user.midi.length > 3) { %> selected <% } %>>MIDI Activated</option>
+                      </select>
+                      You will be able to send MIDI signals to a music / light device via USB. You might need to map the channels below for it to work correctly.
+                    </label>
+                    <br>
+                     <a href="javascript:" id="advancedmidi">+ channel map</a>
+
+                    <br>
+                    <div id="midisetting">
+                      <br>
+                      <label for="midinodechannel" class="pure-input" id="midinodechannelcaption">
+                          MIDI output channel for nodes added:
+                          <select id="midinodechannel" name="midinodechannel">
+                          <option value="01" <% if (user.midi != undefined && user.midi.substr(0,2)=='01' || user.midi == undefined) { %> selected <% } %>>01</option>
+                          <option value="02" <% if (user.midi != undefined && user.midi.substr(0,2)=='02') { %> selected <% } %>>02</option>
+                          <option value="03" <% if (user.midi != undefined && user.midi.substr(0,2)=='03') { %> selected <% } %>>03</option>
+                          <option value="04" <% if (user.midi != undefined && user.midi.substr(0,2)=='04') { %> selected <% } %>>04</option>
+                          <option value="05" <% if (user.midi != undefined && user.midi.substr(0,2)=='05') { %> selected <% } %>>05</option>
+                          <option value="06" <% if (user.midi != undefined && user.midi.substr(0,2)=='06') { %> selected <% } %>>06</option>
+                          <option value="07" <% if (user.midi != undefined && user.midi.substr(0,2)=='07') { %> selected <% } %>>07</option>
+                          <option value="08" <% if (user.midi != undefined && user.midi.substr(0,2)=='08') { %> selected <% } %>>08</option>
+                          <option value="09" <% if (user.midi != undefined && user.midi.substr(0,2)=='09') { %> selected <% } %>>09</option>
+                          <option value="10" <% if (user.midi != undefined && user.midi.substr(0,2)=='10') { %> selected <% } %>>10</option>
+                          <option value="11" <% if (user.midi != undefined && user.midi.substr(0,2)=='11') { %> selected <% } %>>11</option>
+                          <option value="12" <% if (user.midi != undefined && user.midi.substr(0,2)=='12') { %> selected <% } %>>12</option>
+                          <option value="13" <% if (user.midi != undefined && user.midi.substr(0,2)=='13') { %> selected <% } %>>13</option>
+                          <option value="14" <% if (user.midi != undefined && user.midi.substr(0,2)=='14') { %> selected <% } %>>14</option>
+                          <option value="15" <% if (user.midi != undefined && user.midi.substr(0,2)=='15') { %> selected <% } %>>15</option>
+                          <option value="16" <% if (user.midi != undefined && user.midi.substr(0,2)=='16') { %> selected <% } %>>16</option>
+                          </select>
+                      </label>
+
+
+                      <label for="graph-view" class="pure-radio">
+                          MIDI nodes play note
+                          <input type="text" id="midinodenote" size="2" maxlength="2" class="pure-input" name="midinodenote" placeholder="" value="<% if (user.midi != undefined && user.midi.substr(10,2).length > 0) { %><%=user.midi.substr(10,2)%><% } else { %>C2<% } %>">
+                      </label>
+                      <br>
+
+                      <label for="midiedgechannel" class="pure-input" id="midiedgechannelcaption">
+                          MIDI output channel for edges added:
+                          <select id="midiedgechannel" name="midiedgechannel">
+                            <option value="01" <% if (user.midi != undefined && user.midi.substr(2,2)=='01') { %> selected <% } %>>01</option>
+                            <option value="02" <% if (user.midi != undefined && user.midi.substr(2,2)=='02' || user.midi == undefined) { %> selected <% } %>>02</option>
+                            <option value="03" <% if (user.midi != undefined && user.midi.substr(2,2)=='03') { %> selected <% } %>>03</option>
+                            <option value="04" <% if (user.midi != undefined && user.midi.substr(2,2)=='04') { %> selected <% } %>>04</option>
+                            <option value="05" <% if (user.midi != undefined && user.midi.substr(2,2)=='05') { %> selected <% } %>>05</option>
+                            <option value="06" <% if (user.midi != undefined && user.midi.substr(2,2)=='06') { %> selected <% } %>>06</option>
+                            <option value="07" <% if (user.midi != undefined && user.midi.substr(2,2)=='07') { %> selected <% } %>>07</option>
+                            <option value="08" <% if (user.midi != undefined && user.midi.substr(2,2)=='08') { %> selected <% } %>>08</option>
+                            <option value="09" <% if (user.midi != undefined && user.midi.substr(2,2)=='09') { %> selected <% } %>>09</option>
+                            <option value="10" <% if (user.midi != undefined && user.midi.substr(2,2)=='10') { %> selected <% } %>>10</option>
+                            <option value="11" <% if (user.midi != undefined && user.midi.substr(2,2)=='11') { %> selected <% } %>>11</option>
+                            <option value="12" <% if (user.midi != undefined && user.midi.substr(2,2)=='12') { %> selected <% } %>>12</option>
+                            <option value="13" <% if (user.midi != undefined && user.midi.substr(2,2)=='13') { %> selected <% } %>>13</option>
+                            <option value="14" <% if (user.midi != undefined && user.midi.substr(2,2)=='14') { %> selected <% } %>>14</option>
+                            <option value="15" <% if (user.midi != undefined && user.midi.substr(2,2)=='15') { %> selected <% } %>>15</option>
+                            <option value="16" <% if (user.midi != undefined && user.midi.substr(2,2)=='16') { %> selected <% } %>>16</option>
+                          </select>
+                      </label>
+
+                      <label for="graph-view" class="pure-radio">
+                          MIDI edges play note
+                          <input type="text" id="midiedgenote" size="2" maxlength="2" class="pure-input" name="midiedgenote" placeholder="" value="<% if (user.midi != undefined && user.midi.substr(12,2).length > 0) { %><%=user.midi.substr(12,2)%><% } else { %>C2<% } %>">
+                      </label>
+                      <br>
+
+                      <label for="mididevice" class="pure-input" id="mididevicecaption">
+                          MIDI device ID for signal output:
+                          <select id="mididevice" name="mididevice">
+                            <option value="00" <% if (user.midi != undefined && user.midi.substr(4,2)=='00' || user.midi == undefined) { %> selected <% } %>>00</option>
+                            <option value="01" <% if (user.midi != undefined && user.midi.substr(4,2)=='01') { %> selected <% } %>>01</option>
+                            <option value="02" <% if (user.midi != undefined && user.midi.substr(4,2)=='02') { %> selected <% } %>>02</option>
+                            <option value="03" <% if (user.midi != undefined && user.midi.substr(4,2)=='03') { %> selected <% } %>>03</option>
+                          </select>
+                      </label>
+
+                      <label for="mididuration" class="pure-input" id="mididurationcaption">
+                          Duration of output every time:
+                          <select id="mididuration" name="mididuration">
+                            <option value="4000" <% if (user.midi != undefined && user.midi.substr(6,4)=='4000' || user.midi == undefined) { %> selected <% } %>>4000 ms</option>
+                            <option value="3000" <% if (user.midi != undefined && user.midi.substr(6,4)=='3000') { %> selected <% } %>>3000 ms</option>
+                            <option value="2000" <% if (user.midi != undefined && user.midi.substr(6,4)=='2000') { %> selected <% } %>>2000 ms</option>
+                            <option value="1000" <% if (user.midi != undefined && user.midi.substr(6,4)=='1000') { %> selected <% } %>>1000 ms</option>
+                            <option value="9000" <% if (user.midi != undefined && user.midi.substr(6,4)=='9000') { %> selected <% } %>>9000 ms</option>
+                          </select>
+                      </label>
+                      <br>
+
+                      <label for="midiinput" class="pure-input" id="midiinputcaption">
+                          Record the MIDI input graph (# of the device):
+                          <select id="midiinput" name="midiinput">
+                            <option value="no" <% if (user.midi != undefined && user.midi.substr(14,2)=='no' || user.midi == undefined) { %> selected <% } %>>No</option>
+                            <option value="00" <% if (user.midi != undefined && user.midi.substr(14,2)=='00') { %> selected <% } %>>Device 00</option>
+                            <option value="01" <% if (user.midi != undefined && user.midi.substr(14,2)=='01') { %> selected <% } %>>Device 01</option>
+                          </select>
+                      </label>
+
+                        <br>
+
+                    </div>
+                    <br>&nbsp;<br>
+                
+
+                    <button type='submit' class="pure-button pure-button-primary">Save Settings</button>
+
+
+                    <br>
+                    &nbsp;
+                    <legend>&nbsp;</legend>
+
+                    <legend>Manage Your Paid Subscription:</legend>
+                    
+            
+                    Your monthly subscription is the only resource that keeps InfraNodus going and helps me continue contribute to the <a href="http://github.com/noduslabs/infranodus">open-source community</a> in an independent way. Thank you for your continued support! <br><br>We use Chargebee / Stripe to process and manage your monthly payments. If you'd like to change your credit card, update or cancel your subscription, please, click below:<br><br>
+                    <a href="javascript:void(0)" data-cb-type="portal">
+                        Chargebee InfraNodus Subscription Portal</a>
+                    <br><br><em>(please, note, you will need to log in again as it's a different account)</em><br>&nbsp;<br>
+                    If you have any questions about your subscription or have feedback / comments / requests, please, <br>write to me directly at dmitry@noduslabs.com  <br>Tweet or FB on @noduslabs  <br>contact on messengers: +33 6 20 28 44 80.
+                    <br>&nbsp;<br>If you created your account before the 18/10/2018, please, use <a href="https://noduslabs.dpdcart.com/subscriber/login?_ga=2.213150740.1642757009.1556992063-873870762.1556992063">DPD Subscriptions portal</a>. 
+                    <br>
+
+                    &nbsp;<br>
+                    <br>
+                    &nbsp;
+                    <br>
+                    &nbsp;
+                </form>
+                <br>
+                &nbsp;
+                <br>
+                &nbsp;
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/javascripts/jquery.min.js"></script>
+<script src="/javascripts/jquery-ui.min.js"></script>
+<script src="/javascripts/string.min.js"></script>
+<script src="/javascripts/underscore-min.js"></script>
+<script src="/javascripts/jquery.textcomplete.js"></script>
+<script src='/javascripts/jquery.autosize.js'></script>
+<script src="/javascripts/ui.js"></script>
+<script src="/javascripts/jquery.mobile-events.min.js"></script>
+
+<script>
+
+
+var stopwords = decodeURIComponent(getUrlVars()["stopwords"]);
+
+var returncontext = getUrlVars()["returncontext"];
+
+
+
+function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
+$("#addNewContext").on('tap', function(e) {
+
+    $("#addcontextinput").css("visibility", "visible");
+    $("#add").css("visibility", "visible");
+    $("#addcontextname").focus();
+
+
+});
+
+$('#addcontextinput').submit(function(e) {
+    e.preventDefault(); // to stop the form from submitting
+    if ($('#addcontextname').val().length > 0) {
+        var contextredirect = $('#addcontextname').val();
+        contextredirect = contextredirect.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+        contextredirect = contextredirect.replace(/[^\w]/gi, '');
+        window.location.href = "/<%= user.name %>/" + contextredirect + '/edit';
+    }
+
+});
+
+  $(document).ready(function(){
+
+    var advancedpane = 0;
+
+    $('#midisetting').hide();
+
+    $("#advancedmidi").click(function() {
+        if (!advancedpane) {
+    //    $("#advancedsettings").show();
+        $("#advancedmidi").text('– channel map');
+        $("#midisetting").show();
+        advancedpane = 1;
+        }
+        else {
+      //  $("#advancedsettings").hide();
+        $("#advancedmidi").text('+ channel map');
+        $("#midisetting").hide();
+        advancedpane = 0;
+
+        }
+
+    });
+
+      var previous_stopwords = $('#stopwords').val();
+
+      if (stopwords != 'undefined') {
+
+        $('#stopwords').val(stopwords + ' ' + previous_stopwords);
+        $(window).load(function() {
+          $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+        });
+
+      }
+
+
+
+  });
+
+
+</script>
+
+
+<% include statsbelow %>
+
+</body>
+</html>
