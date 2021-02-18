@@ -20,11 +20,13 @@ To quickly start using this project do the following
 1. Run `unzip neo4j-data.zip` to get the initial Neo4J database setup
 1. Navigate to the root directory and run `docker-compose build` 
 1. Navigate to the root directory and run `docker-compose up -d` 
-1. Navigate to `http://localhost:8080` to view the question
-1. Navigate to `http://localhost:3020` to view question graph. 
+1. Navigate to [http://localhost:8080](http://localhost:8080) to view the question
+1. Navigate to [http://localhost:3020](http://localhost:3020) to view question graph. 
 
-	 User: valtech
+	```
+	 Username: valtech
 	 Password: isthebest
+	```
 
 ## Where to go next with this project
 * Fork Infranodus and submit a PR upstream to bring in some of our tweaks to their api.
