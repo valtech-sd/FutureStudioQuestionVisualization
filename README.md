@@ -32,6 +32,8 @@ To quickly start using this project do the following
 * Fork Infranodus and submit a PR upstream to bring in some of our tweaks to their api.
 * Implement better linking of the Infranodus project, possibly even at a specific version (or fork). Right now it's a static copy of the project's master branch as of Feb 2021 + a few modifications to their API code.
 * Adding automated testing.
+* This project is setup to use localhost so a lot of secrets are stored in the docker-compose.yml file. For a PROD/PUBLIC setup, this project should implement the proper separation of secrets that are not included in the repo. Most of the internal services (RabbitMQ and NodeJS) are not exposed publicly, but still it would be better. However, for the two Nginx exposed services (the question form and the Infranodus UI) there should be better password security than hardcoded here.
+* The instructions on how to setup NEO4J from scratch (without using the data zip) could use a bit of tweaking and testing.
 
 ## License (excluding Infranodus)
 
