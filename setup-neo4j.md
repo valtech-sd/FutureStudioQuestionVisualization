@@ -1,11 +1,16 @@
-# Copy these to NEO4J CLI and run
+# README - NEO4J Setup
+
+> **Note:** This repository should contain a starter ZIP that already provides an initialized NEO4J environment. However, in case it does not, the below are useful notes for creating a NEO4J environment suitable for Infranodus.
+
+## Version Supported
+
+The Infranodus used in this project seems to work well with Neo4J v 3.5. The the latest in the v3.x tree is here:
+https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.15/apoc-3.5.0.15-all.jar
+
+## Copy these to NEO4J CLI and run
 
 These have been tested with NEO 3.5.
 The APOC plugin must be in the Plugin directory.
-
-For v 3.5, this is the latest:
-https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.15/apoc-3.5.0.15-all.jar
-
 
 ```text
 CREATE INDEX ON :User(name);
